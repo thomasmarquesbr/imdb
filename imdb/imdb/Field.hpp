@@ -2,7 +2,7 @@
 //  Field.hpp
 //  imdb
 //
-//  Created by Thomás Marques on 11/04/17.
+//  Created by Thomás Marques on 19/04/17.
 //  Copyright © 2017 Thomás Marques. All rights reserved.
 //
 
@@ -13,8 +13,6 @@
 #include <string>
 
 using namespace std;
-
-#endif /* Field_hpp */
 
 class Field{
 private:
@@ -29,3 +27,5 @@ public:
     Field* getNext();
     void clear();
 };
+
+#endif /* Field_hpp */

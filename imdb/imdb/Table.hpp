@@ -2,7 +2,7 @@
 //  Table.hpp
 //  imdb
 //
-//  Created by Thomás Marques on 11/04/17.
+//  Created by Thomás Marques on 19/04/17.
 //  Copyright © 2017 Thomás Marques. All rights reserved.
 //
 
@@ -12,14 +12,19 @@
 #include <stdio.h>
 #include "Element.hpp"
 
-#endif /* Table_hpp */
-
 class Table{
 private:
     Element *element;
-    int size;
+    Table *nextTable;
+    string name;
+    int amountElements;
 public:
-    Table();
+    Table(string name);
+    string getName();
+    void putTable(Table *newTable);
     Element* getElement();
-    int getSize();
+    int getAmountElements();
 };
+
+#endif /* Table_hpp */
+

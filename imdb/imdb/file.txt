@@ -1,0 +1,8 @@
+COPY data_src (datasrc_id, authors, title, "year", journal, vol_city, issue_state, start_page, end_page) FROM stdin;
+D1066 	G.V. Mann	The Health and Nutritional status of Alaskan Eskimos.	1962	American Journal of Clinical Nutrition	11		31	76
+D1073 	J.P. McBride, R.A. Maclead	Sodium and potassium in fish from the Canadian Pacific coast.	1956	Journal of the American Dietetic Association	32		636	638
+D1107 	M.E. Stansby	Chemical Characteristics of fish caught in the northwest Pacific Oceans.	1976	Marine Fish Rev.	38	9	1	11
+D1191 	I.J. Tinsley, R.R. Lowry	Bromine content of lipids of marine organisms	1980	American Oil Chemists' Society, Journal		1	31	33
+D1243 	M. Iwasaki, R. Harada	Composition of the Ros Marine Species.	1985	(Pre-publication copy)				
+D1417 	O. Longe	Effect of boiling on the carbohydrate constituents of some non-leafy vegetables	1981	Food Chemistry	7	1	1	6
+D2793 	D.T. Gordon, G.L. Roberts, D.M. Hernty	Thiamin, Riboflavin, and Niacin content and stability in Pacific coast seafoods.	1979	Journal of Agricultural and Food Chemistry	27	3	483	490

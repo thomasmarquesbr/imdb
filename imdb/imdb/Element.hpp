@@ -2,7 +2,7 @@
 //  Element.hpp
 //  imdb
 //
-//  Created by Thomás Marques on 11/04/17.
+//  Created by Thomás Marques on 19/04/17.
 //  Copyright © 2017 Thomás Marques. All rights reserved.
 //
 
@@ -11,9 +11,6 @@
 
 #include <stdio.h>
 #include "Field.hpp"
-
-
-#endif /* Element_hpp */
 
 class Element{
 private:
@@ -29,3 +26,5 @@ public:
     Element* getRightElement();
     void clear();
 };
+
+#endif /* Element_hpp */

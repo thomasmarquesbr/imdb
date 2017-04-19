@@ -2,7 +2,7 @@
 //  Database.hpp
 //  imdb
 //
-//  Created by Thomás Marques on 11/04/17.
+//  Created by Thomás Marques on 19/04/17.
 //  Copyright © 2017 Thomás Marques. All rights reserved.
 //
 
@@ -12,14 +12,15 @@
 #include <stdio.h>
 #include "Table.hpp"
 
-#endif /* Database_hpp */
-
 class Database{
 private:
-    Table* table;
-    int size;
+    Table *table;
+    int amountTables;
 public:
     Database();
-    Table* getTable();
-    int getSize();
+    void addTable(Table *newTable);
+    Table* getTable(string name);
+    int getAmountTables();
 };
+
+#endif /* Database_hpp */
