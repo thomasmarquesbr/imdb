@@ -65,68 +65,168 @@ void print(vector<string> list) {
     }
 }
 
-Database* readFile(string pathFile){
-    Database database;
-    
+//Database* readFile(string pathFile){
+//    Database database;
+//    
+//    string line;
+//    ifstream myfile (pathFile);
+//    bool mustRead = false;
+//    bool mustConstructTable = false;
+//    if (myfile.is_open()) {
+//        while (getline(myfile,line)) {
+//            if (isdigit(*line.begin()) || isalpha(*line.begin())) {
+//                string name_table;
+//                vector<string> fields;
+//                vector<string> listAttrib;
+//                split(line,fields);
+//                for (vector<string>::iterator field=fields.begin(); field!=fields.end(); ++field) {
+//                    if (*field == "CREATE"){
+//                        field += 2;
+//                        string name_table = *field;
+//                        getline(myfile,line);
+//                    }
+//                    if (*field == "COPY") {
+//                        field++;
+////                        name_table = *field;
+////                        cout<<name_table<<endl;
+//                        field++;
+//                        string name_attrib = *field;
+//                        if (name_attrib.find('(') != string::npos){
+//                            listAttrib.clear();
+//                            while (name_attrib.find(')') == string::npos){
+//                                listAttrib.push_back(removeCharsFromString(name_attrib, "\"(,"));
+//                                field++;
+//                                name_attrib = *field;
+//                            }
+//                            listAttrib.push_back(removeCharsFromString(name_attrib, "\"(,)"));
+////                            print(listAttrib);
+//                        }
+//                        field++;
+//                    } else if(*field == "stdin;"){
+//                        getline(myfile,line);
+//                        mustRead = true;
+//                    }
+//                }
+//                if (mustRead) {
+//                    //                    cout<<line<<endl;
+//                }
+//            } else if (line.substr(0,2) == "\\."){
+//                mustRead = false;
+//                //                cout<<"PARAR DE LER"<<endl;
+//            }
+//        }
+//        myfile.close();
+//    } else
+//        cout << "Erro ao abrir o arquivo";
+//    
+//    return &database;
+//}
+
+
+
+void readFiles(string pathFile) {
     string line;
-    ifstream myfile (pathFile);
-    bool mustRead = false;
-    if (myfile.is_open()) {
-        while (getline(myfile,line)) {
-            if (isdigit(*line.begin()) || isalpha(*line.begin())) {
-                string name_table;
-                vector<string> fields;
-                vector<string> listAttrib;
-                split(line,fields);
-                for (vector<string>::iterator field=fields.begin(); field!=fields.end(); ++field) {
-                    if (*field == "COPY") {
-                        field++;
-                        name_table = *field;
-//                        cout<<name_table<<endl;
-                        field++;
-                        string name_attrib = *field;
-                        if (name_attrib.find('(') != string::npos){
-                            listAttrib.clear();
-                            while (name_attrib.find(')') == string::npos){
-                                listAttrib.push_back(removeCharsFromString(name_attrib, "\"(,"));
-                                field++;
-                                name_attrib = *field;
+    ifstream myFile(pathFile);
+    if (myFile.is_open()){
+        while (getline(myFile,line)) {
+            
+            if (isdigit(*line.begin()) || isalpha(*line.begin()) || line.substr(0,2) == "\\." || line.substr(0,2) == ");") {
+//                cout<<line<<endl;
+                vector<string> words;
+                split(line, words);
+                if (*words.begin() == "CREATE") { //Criando tabelas
+                    while(line.substr(0,2) != ");"){
+                        getline(myFile, line);
+                        vector<string> words;
+                        split(line, words);
+                        for (vector<string>::iterator field=words.begin(); field!=words.end(); ++field) {
+                            if ((*field != "")&&(*field != ");")) {
+                                string name_attrib = removeCharsFromString(*field, "\"");
+                                break;
                             }
-                            listAttrib.push_back(removeCharsFromString(name_attrib, "\"(,)"));
-//                            print(listAttrib);
                         }
-                        field++;
-                    } else if(*field == "stdin;"){
-                        getline(myfile,line);
-                        mustRead = true;
                     }
+                } else if (*words.begin() == "COPY") {//populando tabelas
+                    string name_table = words[1];
+                    vector<string> attribs;
+                    vector<string>::iterator field = words.begin()+2;
+                    while (field != words.end() - 2){
+                        attribs.push_back(removeCharsFromString(*field, "\"(,)"));
+                        ++field;
+                    }
+                    while (getline(myFile, line)){
+                        if (line.substr(0,2) == "\\.")
+                            break;
+                        istringstream iss(line);
+                        string value;
+                        while(getline(iss, value, '\t')){
+                            if (!value.empty()){
+                                
+                            }
+                        }
+                    }
+                    //Copiar da antiga pra cá
                 }
-                if (mustRead) {
-                    //                    cout<<line<<endl;
-                }
-            } else if (line.substr(0,2) == "\\."){
-                mustRead = false;
-                //                cout<<"PARAR DE LER"<<endl;
+                
             }
+            
         }
-        myfile.close();
-    } else
-        cout << "Erro ao abrir o arquivo";
+        myFile.close();
+    } else {
+        cout<<"Falha ao abrir o arquivo"<<endl;
+    }
     
-    return &database;
 }
 
 int main(int argc, const char * argv[]) {
     // insert code here...
 //    std::cout << "Hello, World!\n";
   
-    Database *database = readFile("file.txt");
+    //readFiles("file.txt");
     
-    if (database == NULL) {
-        cout<<"ERRO ao criar banco"<<endl;
-    } else {
-        cout<<"Total de tabelas: "<<database->getAmountTables()<<endl;
+//    Element element;
+//    element.addField("campo1", "valor1");
+//    element.addField("campo2", "valor2");
+//    element.addField("campo3", "valor3");
+//    
+//    Element element2;
+//    element2.addField("campo4", "valor4");
+//    element2.addField("campo5", "valor5");
+//    element2.addField("campo6", "valor6");
+    
+//    Element element;
+    Database database;
+    
+    int count = 0;
+    for(int i=0; i<10; i++){
+        Table *table = new Table("table"+to_string(i));
+        table->addAttribute("attribute"+to_string(i+count));
+        count++;
+        table->addAttribute("attribute"+to_string(i+count));
+        count++;
+        table->addAttribute("attribute"+to_string(i+count));
+        count++;
+        database.addTable(table);
+        database.addTable(table);
+        
     }
+    
+    
+    
+//    cout<<element.getAmountFields()<<endl;
+//    element.printFields();
+    
+    
+
+    
+    
+//    Database *database = readFile("file.txt");
+//    
+//    if (database == NULL) {
+//        cout<<"ERRO ao criar banco"<<endl;
+//    } else {
+//        cout<<"Total de tabelas: "<<database->getAmountTables()<<endl;
+//    }
     
     return 0;
 }

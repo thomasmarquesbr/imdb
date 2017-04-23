@@ -6,6 +6,7 @@
 //  Copyright © 2017 Thomás Marques. All rights reserved.
 //
 
+#include <iostream>
 #include "Field.hpp"
 
 Field::Field(string name, string value){
@@ -26,6 +27,13 @@ Field* Field::getNext(){
     return this->next;
 }
 
+void Field::setValue(string value){
+    this->value = value;
+}
+
+void Field::setNext(Field *field){
+    this->next = field;
+}
+
 void Field::clear(){
-    
 }

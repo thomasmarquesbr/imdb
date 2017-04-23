@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E91E3C711EAC48E200B8592A /* Attribute.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E91E3C6F1EAC48E200B8592A /* Attribute.cpp */; };
 		E9D2CD991EA7905700D698C1 /* Database.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E9D2CD971EA7905600D698C1 /* Database.cpp */; };
 		E9D2CD9C1EA7919D00D698C1 /* Table.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E9D2CD9A1EA7919C00D698C1 /* Table.cpp */; };
 		E9D2CD9F1EA791F300D698C1 /* Element.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E9D2CD9D1EA791F300D698C1 /* Element.cpp */; };
@@ -38,6 +39,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		E91E3C6F1EAC48E200B8592A /* Attribute.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Attribute.cpp; sourceTree = "<group>"; };
+		E91E3C701EAC48E200B8592A /* Attribute.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Attribute.hpp; sourceTree = "<group>"; };
 		E9D2CD971EA7905600D698C1 /* Database.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Database.cpp; sourceTree = "<group>"; };
 		E9D2CD981EA7905600D698C1 /* Database.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Database.hpp; sourceTree = "<group>"; };
 		E9D2CD9A1EA7919C00D698C1 /* Table.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Table.cpp; sourceTree = "<group>"; };
@@ -91,6 +94,8 @@
 				E9D2CD9E1EA791F300D698C1 /* Element.hpp */,
 				E9D2CDA01EA7923400D698C1 /* Field.cpp */,
 				E9D2CDA11EA7923400D698C1 /* Field.hpp */,
+				E91E3C6F1EAC48E200B8592A /* Attribute.cpp */,
+				E91E3C701EAC48E200B8592A /* Attribute.hpp */,
 			);
 			path = imdb;
 			sourceTree = "<group>";
@@ -153,6 +158,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E91E3C711EAC48E200B8592A /* Attribute.cpp in Sources */,
 				E9D2CD9C1EA7919D00D698C1 /* Table.cpp in Sources */,
 				E9D2CDA21EA7923400D698C1 /* Field.cpp in Sources */,
 				E9D2CD991EA7905700D698C1 /* Database.cpp in Sources */,

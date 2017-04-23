@@ -11,19 +11,28 @@
 
 #include <stdio.h>
 #include "Element.hpp"
+#include "Attribute.hpp"
 
 class Table{
 private:
-    Element *element;
-    Table *nextTable;
     string name;
     int amountElements;
+    Attribute *firstAttribute;
+    Attribute *lastAttribute;
+    Element *firstElement;
+    Table *nextTable;
 public:
     Table(string name);
-    string getName();
-    void putTable(Table *newTable);
-    Element* getElement();
+    bool empty();
+    bool validateAttributes(Attribute *attribute);
     int getAmountElements();
+    string getName();
+    Element* getFirstElement();
+    Table* getNextTable();
+    void addAttribute(string name);
+    void setNextTable(Table *newTable);
+    void printAttributes();
+    void clear();
 };
 
 #endif /* Table_hpp */

@@ -14,13 +14,19 @@
 
 class Database{
 private:
-    Table *table;
+    Table *firstTable;
+    Table *lastTable;
     int amountTables;
 public:
     Database();
-    void addTable(Table *newTable);
-    Table* getTable(string name);
+    bool empty();
     int getAmountTables();
+    Table* getFirstTable();
+    Table* getLastTable();
+    Table* getTable(string name);
+    void addTable(Table *newTable);
+    void removeTable(string name);
+    void clear();
 };
 
 #endif /* Database_hpp */

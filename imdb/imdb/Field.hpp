@@ -25,6 +25,8 @@ public:
     string getName();
     string getValue();
     Field* getNext();
+    void setValue(string value);
+    void setNext(Field *field);
     void clear();
 };
 

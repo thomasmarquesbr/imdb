@@ -14,16 +14,24 @@
 
 class Element{
 private:
-    Field *field;
-    int size;
+    int amountFields;
+    Field *firstField;
+    Field *lastField;
     Element *leftElement;
     Element *rightElement;
 public:
     Element();
-    Field* getField();
-    int getSize();
+    bool empty();
+    bool existField(string name);
+    int getAmountFields();
+    Field* getFirstField();
+    Field* getLastField();
+    Field* getField(string name);
     Element* getLeftElement();
     Element* getRightElement();
+    void addField(string name, string value);
+    void removeField(string name);
+    void printFields();
     void clear();
 };
 
