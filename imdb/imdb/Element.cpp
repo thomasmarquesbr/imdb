@@ -10,11 +10,15 @@
 #include "Element.hpp"
 
 Element::Element(){
+    this->height = 0;
+    this->balance = EQUAL;
     this->firstField = NULL;
     this->lastField = NULL;
     this->amountFields = 0;
-    this->leftElement = NULL;
-    this->rightElement = NULL;
+    this->subTreeElement[LEFT] = NULL;
+    this->subTreeElement[RIGHT] = NULL;
+//    this->leftElement = NULL;
+//    this->rightElement = NULL;
 }
 
 bool Element::empty(){
@@ -53,12 +57,16 @@ Field* Element::getField(string name){
     return field;
 }
 
-Element* Element::getLeftElement(){
-    return this->leftElement;
+Element*& Element::getSubTreeElement(int direction) {
+    return this->subTreeElement[direction];
 }
 
-Element* Element::getRightElement(){
-    return this->rightElement;
+Element*& Element::getLeftElement(){
+    return this->subTreeElement[LEFT];
+}
+
+Element*& Element::getRightElement(){
+    return this->subTreeElement[RIGHT];
 }
 
 void Element::removeField(string name){
@@ -83,7 +91,19 @@ void Element::removeField(string name){
     }
 }
 
-void Element::addField(string name, string value){
+int Element::getBalance() {
+    return this->balance;
+}
+
+void Element::setBalance(unsigned short balance) {
+    this->balance = balance;
+}
+
+void Element::setSubTreeElement(Element *&element, int direction) {
+    this->subTreeElement[direction] = element;
+}
+
+void Element::addField(string name, string value) {
     Field* field = getField(name);
     if (field == NULL){//não existe
         Field* newField = new Field(name, value);

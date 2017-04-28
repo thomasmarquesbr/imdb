@@ -197,8 +197,8 @@ int main(int argc, const char * argv[]) {
 //    Element element;
     Database database;
     
-    int count = 0;
-    for(int i=0; i<10; i++){
+    int count = 1;
+    for(int i=0; i<3; i++){//tabelas
         Table *table = new Table("table"+to_string(i));
         table->addAttribute("attribute"+to_string(i+count));
         count++;
@@ -206,10 +206,57 @@ int main(int argc, const char * argv[]) {
         count++;
         table->addAttribute("attribute"+to_string(i+count));
         count++;
-        database.addTable(table);
-        database.addTable(table);
         
+        int count2 = 1;
+        for(int j=0; j<10; j++){
+            Element *element = new Element();
+            element->addField("campo"+to_string(j), "valor"+to_string(j));
+            count2++;
+            element->addField("campo"+to_string(j+count2), "valor"+to_string(j+count2));
+            count2++;
+            element->addField("campo"+to_string(j+count2), "valor"+to_string(j+count2));
+            count2++;
+            table->addElement(element);
+            element = NULL;
+        }
+//        table->drawTree();
+        database.addTable(table);
     }
+    
+//    Table *table = new Table("table");
+//    
+//    Element *element0 = new Element();
+//    element0->addField("campo0", "valor0");
+//    table->addElement(element0);
+//    
+//    Element *element1 = new Element();
+//    element1->addField("campo1", "valor1");
+//    table->addElement(element1);
+//    
+//    Element *element2 = new Element();
+//    element2->addField("campo2", "valor2");
+//    table->addElement(element2);
+//    
+//    Element *element3 = new Element();
+//    element3->addField("campo3", "valor3");
+//    table->addElement(element3);
+//    
+//    Element *element4 = new Element();
+//    element4->addField("campo4", "valor4");
+//    table->addElement(element4);
+//    
+//    Element *element5 = new Element();
+//    element5->addField("campo5", "valor5");
+//    table->addElement(element5);
+    
+//    cout << table->getAmountElements() <<endl;
+    
+//    table->printElementsPreOrdem();
+    
+//    cout << table->getRootElement()->getFirstField()->getName() << endl;
+    
+//    cout << table->getRootElement()->getLeftElement()->getFirstField()->getValue() << endl;
+//    cout << table->getRootElement()->getRightElement()->getFirstField()->getValue() << endl;
     
     
     

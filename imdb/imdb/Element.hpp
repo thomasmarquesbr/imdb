@@ -12,13 +12,22 @@
 #include <stdio.h>
 #include "Field.hpp"
 
+enum Direction {
+    LEFT  = 0,
+    RIGHT = 1,
+    EQUAL = 2,
+};
+
 class Element{
 private:
     int amountFields;
+    int height;
     Field *firstField;
     Field *lastField;
-    Element *leftElement;
-    Element *rightElement;
+    unsigned short balance;
+//    Element *leftElement;
+//    Element *rightElement;
+    Element *subTreeElement[2];
 public:
     Element();
     bool empty();
@@ -27,8 +36,12 @@ public:
     Field* getFirstField();
     Field* getLastField();
     Field* getField(string name);
-    Element* getLeftElement();
-    Element* getRightElement();
+    Element*& getSubTreeElement(int direction);
+    Element*& getLeftElement();
+    Element*& getRightElement();
+    int getBalance();
+    void setSubTreeElement(Element*& element, int direction);
+    void setBalance(unsigned short balance);
     void addField(string name, string value);
     void removeField(string name);
     void printFields();
