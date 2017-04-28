@@ -181,12 +181,10 @@ Element* Table::findElement(string key) {
         } else if (key.compare(current->getFirstField()->getValue()) < 0) {
             current = current->getSubTreeElement(LEFT);
         } else {
-            value = current->Value;
-            return true;
+            return current;
         }
     }
-    // O valor não estava na árvore
-    return false;
+    return NULL;
 }
 
 void Table::printElementsPreOrdem(){

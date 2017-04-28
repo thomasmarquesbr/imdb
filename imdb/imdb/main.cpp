@@ -219,7 +219,7 @@ int main(int argc, const char * argv[]) {
             table->addElement(element);
             element = NULL;
         }
-//        table->drawTree();
+        table->drawTree();
         database.addTable(table);
     }
     
