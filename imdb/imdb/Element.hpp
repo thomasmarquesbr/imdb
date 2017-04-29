@@ -25,8 +25,6 @@ private:
     Field *firstField;
     Field *lastField;
     unsigned short balance;
-//    Element *leftElement;
-//    Element *rightElement;
     Element *subTreeElement[2];
 public:
     Element();

@@ -7,6 +7,8 @@
 //
 
 #include <iostream>
+#include <cstdlib>
+#include <cmath>
 #include "Table.hpp"
 
 Table::Table(string name){
@@ -99,7 +101,7 @@ void Table::singleRotation(Element *&element, Direction direction) {
 void Table::doubleRotation(Element *&element, Direction direction) {
     int opposite = this->getOpposite(direction);
     Element* child = element->getSubTreeElement(direction)->getSubTreeElement(opposite);
-    element->setSubTreeElement(child->getSubTreeElement(direction), opposite);
+    element->getSubTreeElement(direction)->setSubTreeElement(child->getSubTreeElement(direction), opposite);
     child->setSubTreeElement(element->getSubTreeElement(direction), direction);
     element->setSubTreeElement(child, direction);
     child = element->getSubTreeElement(direction);
@@ -125,6 +127,29 @@ void Table::rebalanceInsert(Element*& element, Direction direction, bool& height
         heightChanged = false;
     } else {
         element->setBalance(direction);
+    }
+}
+
+void Table::rebalanceRemove(Element*& element, Direction direction, bool& heightChanged) {
+    Direction opposite = this->getOpposite(direction);
+    if (element->getBalance() == direction) {
+        element->setBalance(EQUAL);
+    } else if (element->getBalance() == opposite) {
+        if (element->getSubTreeElement(opposite)->getBalance() == opposite) {
+            element->getSubTreeElement(opposite)->setBalance(EQUAL);
+            element->setBalance(EQUAL);
+            singleRotation(element, opposite);
+        } else if (element->getSubTreeElement(opposite)->getBalance() == EQUAL) {
+            element->getSubTreeElement(opposite)->setBalance(direction);
+            singleRotation(element, opposite);
+        } else {
+            updateBalance(element, opposite);
+            doubleRotation(element, opposite);
+        }
+        heightChanged = false;
+    } else {
+        element->setBalance(opposite);
+        heightChanged = false;
     }
 }
 
@@ -154,13 +179,16 @@ void Table::addElement(Element *newElement, Element*& currentElement, bool& heig
         currentElement = newElement;
         heightChanged = true;
         this->amountElements++;
+//    } else if (currentElement->getFirstField()->getValueInt() == newElement->getFirstField()->getValueInt()) { //já existe
     } else if (currentElement->getFirstField()->getValue().compare(
-                    newElement->getFirstField()->getValue()) == 0) { //já existe
+                        newElement->getFirstField()->getValue()) == 0) { //já existe
         cout << "Elemento " << currentElement->getFirstField()->getValue() << " ja existe na tabela " << this->getName();
         return;
     } else {
-        Direction direction = (currentElement->getFirstField()->getValue().compare(
-                                newElement->getFirstField()->getValue()) < 0) ? RIGHT : LEFT;
+//        Direction direction = (newElement->getFirstField()->getValueInt() >
+//                                    currentElement->getFirstField()->getValueInt()) ? RIGHT : LEFT;
+        Direction direction = (newElement->getFirstField()->getValue().compare(
+                                    currentElement->getFirstField()->getValue()) > 0) ? RIGHT : LEFT;
         heightChanged = false;
         addElement(newElement, currentElement->getSubTreeElement(direction), heightChanged);
         if (heightChanged) {
@@ -169,15 +197,64 @@ void Table::addElement(Element *newElement, Element*& currentElement, bool& heig
     }
 }
 
-void Table::removeElement(string key) {
-    
+bool Table::removeElement(string key) {
+    bool heightChanged = false;
+//    int newKey = key[0] * pow(10, key.length()-1) + strtol(key.c_str()+1, NULL, 10);
+    return this->removeElement(key, this->rootElement, heightChanged);
+}
+
+bool Table::removeElement(const string &key, Element *&currentElement, bool &heightChanged) {
+    bool success = false;
+    if (currentElement == NULL) {
+        heightChanged = false;
+        return false;
+//    } else if (key == currentElement->getFirstField()->getValueInt()) {
+    } else if (key.compare(currentElement->getFirstField()->getValue()) == 0) {
+        if (currentElement->getLeftElement() != NULL && currentElement->getRightElement() != NULL ) {
+            Element* substitute = currentElement->getLeftElement();
+            while (substitute->getRightElement() != NULL) {
+                substitute = substitute->getRightElement();
+            }
+            currentElement = substitute;
+//            node->Key   = substitute->Key;
+            success = removeElement(currentElement->getFirstField()->getValue(), currentElement->getLeftElement(), heightChanged);
+            if (heightChanged) {
+                rebalanceRemove(currentElement, LEFT, heightChanged);
+            }
+        } else {
+            Element* temp = currentElement;
+            Direction direction = (currentElement->getLeftElement() == NULL) ? RIGHT : LEFT;
+            currentElement = currentElement->getSubTreeElement(direction);
+            temp->getLeftElement() = NULL;
+            temp->getRightElement() = NULL;
+//            delete temp;
+            heightChanged = true;
+        }
+        return true;
+    } else {
+//        Direction direction = (key > currentElement->getFirstField()->getValueInt()) ? RIGHT : LEFT;
+        Direction direction = (key.compare(currentElement->getFirstField()->getValue()) > 0) ? RIGHT : LEFT;
+        if (currentElement->getSubTreeElement(direction) != NULL) {
+            success = this->removeElement(key, currentElement->getSubTreeElement(direction), heightChanged);
+        } else {
+            heightChanged = false;
+            return false;
+        }
+        if (heightChanged) {
+            this->rebalanceRemove(currentElement, direction, heightChanged);
+        }
+        return success;
+    }
 }
 
 Element* Table::findElement(string key) {
+//    int iKey = key[0] * pow(10, key.length()-1) + strtol(key.c_str()+1, NULL, 10);
     Element* current = this->rootElement;
     while (current != NULL) {
+//        if (iKey > current->getFirstField()->getValueInt()) {
         if (key.compare(current->getFirstField()->getValue()) > 0) {
             current = current->getSubTreeElement(RIGHT);
+//        } else if (iKey < current->getFirstField()->getValueInt()) {
         } else if (key.compare(current->getFirstField()->getValue()) < 0) {
             current = current->getSubTreeElement(LEFT);
         } else {

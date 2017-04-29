@@ -25,9 +25,11 @@ private:
     inline Direction getOpposite(Direction direction);
     void singleRotation(Element*& element, Direction direction);
     void doubleRotation(Element*& element, Direction direction);
-    void rebalanceInsert(Element*& treeElement, Direction dir, bool& heightChanged);
+    void rebalanceInsert(Element*& element, Direction direction, bool& heightChanged);
+    void rebalanceRemove(Element*& element, Direction direction, bool& heightChanged);
     void updateBalance(Element* element, Direction direction);
     void addElement(Element *newElement, Element*& currentElement, bool& heightChanged);
+    bool removeElement(const string& key, Element*& currentElement, bool& heightChanged);
     void readPreOrdem(Element*& node);
     void readInOrdem(Element*& node);
     void readPosOrdem(Element*& node);
@@ -46,7 +48,7 @@ public:
     void clear();
     
     void addElement(Element *newElement);
-    void removeElement(string key);
+    bool removeElement(string key);
     Element* findElement(string key);
     
     void printElementsPreOrdem();

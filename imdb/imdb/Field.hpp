@@ -24,6 +24,7 @@ public:
     Field(string, string);
     string getName();
     string getValue();
+    int getValueInt();
     Field* getNext();
     void setValue(string value);
     void setNext(Field *field);

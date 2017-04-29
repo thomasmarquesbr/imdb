@@ -7,6 +7,8 @@
 //
 
 #include <iostream>
+#include <cstdlib>
+#include <cmath>
 #include "Field.hpp"
 
 Field::Field(string name, string value){

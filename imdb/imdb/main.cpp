@@ -14,6 +14,8 @@
 #include <iterator>
 #include <sstream>
 #include <fstream>
+#include <cstdlib>
+#include <cmath>
 
 #include "Database.hpp"
 #include "Table.hpp"
@@ -197,57 +199,104 @@ int main(int argc, const char * argv[]) {
 //    Element element;
     Database database;
     
-    int count = 1;
-    for(int i=0; i<3; i++){//tabelas
-        Table *table = new Table("table"+to_string(i));
-        table->addAttribute("attribute"+to_string(i+count));
-        count++;
-        table->addAttribute("attribute"+to_string(i+count));
-        count++;
-        table->addAttribute("attribute"+to_string(i+count));
-        count++;
-        
-        int count2 = 1;
-        for(int j=0; j<10; j++){
-            Element *element = new Element();
-            element->addField("campo"+to_string(j), "valor"+to_string(j));
-            count2++;
-            element->addField("campo"+to_string(j+count2), "valor"+to_string(j+count2));
-            count2++;
-            element->addField("campo"+to_string(j+count2), "valor"+to_string(j+count2));
-            count2++;
-            table->addElement(element);
-            element = NULL;
-        }
-        table->drawTree();
-        database.addTable(table);
-    }
+//    int count = 1;
+//    for(int i=0; i<3; i++){//tabelas
+//        Table *table = new Table("table"+to_string(i));
+//        table->addAttribute("attribute"+to_string(i+count));
+//        count++;
+//        table->addAttribute("attribute"+to_string(i+count));
+//        count++;
+//        table->addAttribute("attribute"+to_string(i+count));
+//        count++;
+//        
+//        int count2 = 1;
+//        for(int j=0; j<10; j++){
+//            Element *element = new Element();
+//            element->addField("campo"+to_string(j), "valor"+to_string(j));
+//            count2++;
+//            element->addField("campo"+to_string(j+count2), "valor"+to_string(j+count2));
+//            count2++;
+//            element->addField("campo"+to_string(j+count2), "valor"+to_string(j+count2));
+//            count2++;
+//            table->addElement(element);
+//            element = NULL;
+//        }
+//        table->drawTree();
+//        database.addTable(table);
+//    }
     
-//    Table *table = new Table("table");
+    Table *table = new Table("table");
+    
+    Element *element0 = new Element();
+    element0->addField("campo0", "valor0");
+    table->addElement(element0);
+    
+    Element *element1 = new Element();
+    element1->addField("campo1", "valor1");
+    table->addElement(element1);
+    
+    Element *element2 = new Element();
+    element2->addField("campo2", "valor2");
+    table->addElement(element2);
+//
+    Element *element3 = new Element();
+    element3->addField("campo3", "valor3");
+    table->addElement(element3);
+//
+    Element *element4 = new Element();
+    element4->addField("campo4", "valor4");
+    table->addElement(element4);
 //    
-//    Element *element0 = new Element();
-//    element0->addField("campo0", "valor0");
-//    table->addElement(element0);
-//    
-//    Element *element1 = new Element();
-//    element1->addField("campo1", "valor1");
-//    table->addElement(element1);
-//    
-//    Element *element2 = new Element();
-//    element2->addField("campo2", "valor2");
-//    table->addElement(element2);
-//    
-//    Element *element3 = new Element();
-//    element3->addField("campo3", "valor3");
-//    table->addElement(element3);
-//    
-//    Element *element4 = new Element();
-//    element4->addField("campo4", "valor4");
-//    table->addElement(element4);
-//    
-//    Element *element5 = new Element();
-//    element5->addField("campo5", "valor5");
-//    table->addElement(element5);
+    Element *element5 = new Element();
+    element5->addField("campo5", "valor5");
+    table->addElement(element5);
+//
+    Element *element6 = new Element();
+    element6->addField("campo6", "valor6");
+    table->addElement(element6);
+
+    Element *element7 = new Element();
+    element7->addField("campo7", "valor7");
+    table->addElement(element7);
+
+    Element *element8 = new Element();
+    element8->addField("campo8", "valor8");
+    table->addElement(element8);
+    
+    Element *element9 = new Element();
+    element9->addField("campo9", "valor9");
+    table->addElement(element9);
+
+    Element *element10 = new Element();
+    element10->addField("campo10", "valor10");
+    table->addElement(element10);
+
+    Element *element11 = new Element();
+    element11->addField("campo11", "valor11");
+    table->addElement(element11);
+
+
+    Element *element12 = new Element();
+    element12->addField("campo12", "valor12");
+    table->addElement(element12);
+    
+    table->drawTree();
+    table->removeElement("valor3");
+    cout << endl;
+    cout << endl;
+    table->drawTree();
+    
+//    string val = "SD02";
+////    int newValue = val[0] * pow(10, val.length()-1) + strtol(val.c_str()+1, NULL, 10);
+//    char *chars = new char[val.length()+1];
+//    strcpy(chars,val.c_str());
+    
+    
+//    cout << chars <<endl;
+    
+//    table->removeElement("valor1");
+//    table->drawTree();
+    
     
 //    cout << table->getAmountElements() <<endl;
     
