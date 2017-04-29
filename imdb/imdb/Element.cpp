@@ -21,6 +21,10 @@ Element::Element(){
 //    this->rightElement = NULL;
 }
 
+Element::~Element() {
+    this->clear();
+}
+
 bool Element::empty(){
     return (firstField == NULL);
 }
@@ -134,5 +138,11 @@ void Element::printFields(){
 }
 
 void Element::clear(){
-    
+    Field *aux = this->firstField;
+    while (aux != NULL) {
+        firstField = firstField->getNext();
+        delete aux;
+        aux = firstField;
+    }
+    lastField = NULL;
 }

@@ -26,8 +26,11 @@ private:
     Field *lastField;
     unsigned short balance;
     Element *subTreeElement[2];
+    
+    void clear();
 public:
     Element();
+    ~Element();
     bool empty();
     bool existField(string name);
     int getAmountFields();
@@ -43,7 +46,6 @@ public:
     void addField(string name, string value);
     void removeField(string name);
     void printFields();
-    void clear();
 };
 
 #endif /* Element_hpp */

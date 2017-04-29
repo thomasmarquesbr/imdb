@@ -19,6 +19,7 @@ private:
     int amountTables;
 public:
     Database();
+    ~Database();
     bool empty();
     int getAmountTables();
     Table* getFirstTable();

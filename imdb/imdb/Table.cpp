@@ -20,6 +20,10 @@ Table::Table(string name){
     this->nextTable = NULL;
 }
 
+Table::~Table() {
+    this->clear();
+}
+
 bool Table::empty(){
     return (rootElement == NULL);
 }
@@ -199,7 +203,6 @@ void Table::addElement(Element *newElement, Element*& currentElement, bool& heig
 
 bool Table::removeElement(string key) {
     bool heightChanged = false;
-//    int newKey = key[0] * pow(10, key.length()-1) + strtol(key.c_str()+1, NULL, 10);
     return this->removeElement(key, this->rootElement, heightChanged);
 }
 
@@ -208,16 +211,15 @@ bool Table::removeElement(const string &key, Element *&currentElement, bool &hei
     if (currentElement == NULL) {
         heightChanged = false;
         return false;
-//    } else if (key == currentElement->getFirstField()->getValueInt()) {
     } else if (key.compare(currentElement->getFirstField()->getValue()) == 0) {
         if (currentElement->getLeftElement() != NULL && currentElement->getRightElement() != NULL ) {
             Element* substitute = currentElement->getLeftElement();
             while (substitute->getRightElement() != NULL) {
                 substitute = substitute->getRightElement();
             }
+            substitute->setSubTreeElement(currentElement->getRightElement(), RIGHT);
             currentElement = substitute;
-//            node->Key   = substitute->Key;
-            success = removeElement(currentElement->getFirstField()->getValue(), currentElement->getLeftElement(), heightChanged);
+//            success = removeElement(currentElement->getFirstField()->getValue(), currentElement->getLeftElement(), heightChanged);
             if (heightChanged) {
                 rebalanceRemove(currentElement, LEFT, heightChanged);
             }
@@ -227,12 +229,10 @@ bool Table::removeElement(const string &key, Element *&currentElement, bool &hei
             currentElement = currentElement->getSubTreeElement(direction);
             temp->getLeftElement() = NULL;
             temp->getRightElement() = NULL;
-//            delete temp;
             heightChanged = true;
         }
         return true;
     } else {
-//        Direction direction = (key > currentElement->getFirstField()->getValueInt()) ? RIGHT : LEFT;
         Direction direction = (key.compare(currentElement->getFirstField()->getValue()) > 0) ? RIGHT : LEFT;
         if (currentElement->getSubTreeElement(direction) != NULL) {
             success = this->removeElement(key, currentElement->getSubTreeElement(direction), heightChanged);
@@ -322,6 +322,19 @@ void Table::drawTree(Element *element, int spaces){
         cout << element->getFirstField()->getValue() << endl;
         drawTree( element->getLeftElement(), spaces + 3 );
     }
+}
+
+void Table::clear(){
+    Attribute *aux = this->firstAttribute;
+    while (aux != NULL) {
+        firstAttribute = firstAttribute->getNext();
+        delete aux;
+        aux = firstAttribute;
+    }
+    lastAttribute = NULL;
+    
+    delete rootElement;
+    this->rootElement = NULL;
 }
 
 

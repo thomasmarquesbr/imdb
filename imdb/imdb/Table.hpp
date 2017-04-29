@@ -34,8 +34,11 @@ private:
     void readInOrdem(Element*& node);
     void readPosOrdem(Element*& node);
     void drawTree(Element* element, int spaces);
+    void clear();
+    
 public:
     Table(string name);
+    ~Table();
     bool empty();
     bool validateAttributes(Attribute *attribute);
     int getAmountElements();
@@ -45,7 +48,6 @@ public:
     void addAttribute(string name);
     void setNextTable(Table *newTable);
     void printAttributes();
-    void clear();
     
     void addElement(Element *newElement);
     bool removeElement(string key);

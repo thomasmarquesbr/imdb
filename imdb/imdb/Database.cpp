@@ -16,6 +16,10 @@ Database::Database(){
     this->amountTables = 0;
 }
 
+Database::~Database(){
+    this->clear();
+}
+
 bool Database::empty(){
     return (firstTable == NULL);
 }
@@ -85,5 +89,11 @@ void Database::removeTable(string name){
 }
 
 void Database::clear(){
-    
+    Table *aux = this->firstTable;
+    while (aux != NULL) {
+        firstTable = firstTable->getNextTable();
+        delete aux;
+        aux = firstTable;
+    }
+    lastTable = NULL;
 }
