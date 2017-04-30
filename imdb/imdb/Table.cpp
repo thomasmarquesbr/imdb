@@ -280,11 +280,11 @@ Element* Table::findElement(string key) {
 }
 
 void Table::printElementsPreOrdem(){
-    cout << "       ";
+    cout << endl << "       ";
     if (this->rootElement != NULL)
         readInOrdem(this->rootElement);
     else
-        cout << "       Tabela vazia.";
+        cout << "Tabela vazia.";
     cout << endl;
 }
 
@@ -296,11 +296,11 @@ void Table::readPreOrdem(Element*& node){
 }
 
 void Table::printElementsInOrdem(){
-    cout << "       ";
+    cout << endl << "       ";
     if (this->rootElement != NULL)
         readInOrdem(this->rootElement);
     else
-        cout << "       Tabela vazia";
+        cout << "Tabela vazia";
     cout << endl;
 }
 
@@ -312,11 +312,11 @@ void Table::readInOrdem(Element*& node) {
 }
 
 void Table::printElementsPosOrdem() {
-    cout << "       ";
+    cout << endl << "       ";
     if (this->rootElement != NULL)
         readInOrdem(this->rootElement);
     else
-        cout << "       Tabela vazia";
+        cout << "Tabela vazia";
     cout << endl;
 }
 
@@ -328,6 +328,7 @@ void Table::readPosOrdem(Element*& node) {
 }
 
 void Table::drawTree() {
+    cout << endl << "       ";
     drawTree(this->rootElement, 0);
 }
 

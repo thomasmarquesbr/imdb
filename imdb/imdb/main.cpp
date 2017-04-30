@@ -181,12 +181,13 @@ void readFiles(string pathFile) {
 }
 
 void showHeader(){
-    cout << "*************************************************** IN MEMORY DATABASE *************************************************** " << endl;
+    cout << "********************************************* IN MEMORY DATABASE - Parte 1 *********************************************** " << endl;
     cout << "**     Curso: Mestrado em Ciência da Computação - UFJF                                                                  ** " << endl;
     cout << "**     Disciplina: Algoritmos e estruturas de dados                                                                     ** " << endl;
     cout << "**     Professor: Jairo Francisco de Souza                                                                              ** " << endl;
     cout << "**     Aluno: Thomás Marques Brandão Reis                                                                               ** " << endl;
     cout << "************************************************************************************************************************** " << endl;
+    cout << endl;
 }
 
 void showMenuDatabase(Database *database) {
@@ -196,7 +197,7 @@ void showMenuDatabase(Database *database) {
         cout << "       / Menu Principal / Banco de Dados" << endl;
         cout << endl;
         cout << "       1. Listar informações do banco" <<endl;
-        cout << "       2. Leitura do arquivo para popular o banco" <<endl;
+        cout << "       2. Leitura de arquivo para popular o banco" <<endl;
         cout << "       3. Voltar" <<endl;
         cout << endl;
         cout << "       >> ";
@@ -260,11 +261,34 @@ void showMenuSearchTable(Table *table){
                 cout << endl;
                 cout << "       Total de registros: " + to_string(table->getAmountElements()) <<endl;
                 cout << "       Chave primária: " + table->getFirstAttribute()->getName() <<endl;
-                cout << "       Registro raiz: " + table->getRootElement()->getFirstField()->getValue() <<endl;
+                if (table->getRootElement() != NULL)
+                    cout << "       Registro raiz: " + table->getRootElement()->getFirstField()->getValue() <<endl;
                 break;
             }
             case 2:{
-                
+                Attribute *attribute = table->getFirstAttribute();
+                Element *element = new Element();
+                string valueAttrib;
+                while (attribute != NULL) {
+                    cout << endl;
+                    cout << "       Digite o nome do valor para o atributo \"" + attribute->getName() +"\" (I para ignorar, X para sair)" << endl;
+                    cout << "       >> ";
+                    cin >> valueAttrib;
+                    cin.clear(); cin.ignore(BC_STRING_MAX,'\n');
+                    if (valueAttrib.at(0) == 'X')
+                        break;
+                    else if (valueAttrib.at(0) == 'I')
+                        attribute = attribute->getNext();
+                    else {
+                        element->addField(attribute->getName(), valueAttrib);
+                        attribute = attribute->getNext();
+                    }
+                }
+                if (element->getFirstField() != NULL)
+                    table->addElement(element);
+                else {
+                    cout << endl << "       O registro deve conter pelo menos a chave primária. O registro não foi criado" << endl;
+                }
                 break;
             }
             case 3:{
@@ -301,7 +325,6 @@ void showMenuSearchTable(Table *table){
             }
             case 8:{
                 choice = -1;
-                cout << "  ---------------------------------------------------------------------------------------------------------------------- " << endl;
                 break;
             }
             default:{
@@ -437,6 +460,7 @@ void showMainMenu(Database *database){
                 cout << endl;
                 cout << "       Escolha inválida." <<endl;
                 cout << endl;
+                cout << "  ---------------------------------------------------------------------------------------------------------------------- " << endl;
                 break;
         }
     }
@@ -444,6 +468,8 @@ void showMainMenu(Database *database){
 
 
 int main(int argc, const char * argv[]) {
+    
+    showHeader();
     
     // insert code here...
 //    std::cout << "Hello, World!\n";
@@ -489,8 +515,6 @@ int main(int argc, const char * argv[]) {
         database.addTable(table);
     }
     
-    showHeader();
-    showMainMenu(&database);
     
 //    Table *table = new Table("table");
 //    table->addAttribute("attribute1");
@@ -611,6 +635,9 @@ int main(int argc, const char * argv[]) {
 //    } else {
 //        cout<<"Total de tabelas: "<<database->getAmountTables()<<endl;
 //    }
+    
+    cout << endl;
+    showMainMenu(&database);
     
     return 0;
 }

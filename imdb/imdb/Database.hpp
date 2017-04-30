@@ -17,6 +17,10 @@ private:
     Table *firstTable;
     Table *lastTable;
     int amountTables;
+    
+    void split(const std::string& str, std::vector<std::string>& v);
+    string removeCharsFromString(const string str, char* charsToRemove);
+    void print(vector<string> list);
 public:
     Database();
     ~Database();
@@ -29,6 +33,7 @@ public:
     void addTable(Table *newTable);
     void removeTable(string name);
     void clear();
+    void readFile(string path);
 };
 
 #endif /* Database_hpp */
