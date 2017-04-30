@@ -127,10 +127,10 @@ void Element::addField(string name, string value) {
 void Element::printFields(){
     Field* field = firstField;
     if(empty())
-        cout << "Os campos do elemento não existem! \n";
+        cout << "       Os campos do elemento não existem! \n";
     else{
         while(field) {
-            cout << field->getName() << ": " << field->getValue() << endl;
+            cout << "       "+ field->getName() << ": " << field->getValue() << endl;
             field = field->getNext();
         }
         cout << endl;

@@ -25,6 +25,7 @@ public:
     Table* getFirstTable();
     Table* getLastTable();
     Table* getTable(string name);
+    void printTables();
     void addTable(Table *newTable);
     void removeTable(string name);
     void clear();

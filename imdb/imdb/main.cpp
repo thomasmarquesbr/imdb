@@ -180,7 +180,271 @@ void readFiles(string pathFile) {
     
 }
 
+void showHeader(){
+    cout << "*************************************************** IN MEMORY DATABASE *************************************************** " << endl;
+    cout << "**     Curso: Mestrado em Ciência da Computação - UFJF                                                                  ** " << endl;
+    cout << "**     Disciplina: Algoritmos e estruturas de dados                                                                     ** " << endl;
+    cout << "**     Professor: Jairo Francisco de Souza                                                                              ** " << endl;
+    cout << "**     Aluno: Thomás Marques Brandão Reis                                                                               ** " << endl;
+    cout << "************************************************************************************************************************** " << endl;
+}
+
+void showMenuDatabase(Database *database) {
+    int choice = 0;
+    while(choice != -1) {
+        cout << "  ---------------------------------------------------------------------------------------------------------------------- " << endl;
+        cout << "       / Menu Principal / Banco de Dados" << endl;
+        cout << endl;
+        cout << "       1. Listar informações do banco" <<endl;
+        cout << "       2. Leitura do arquivo para popular o banco" <<endl;
+        cout << "       3. Voltar" <<endl;
+        cout << endl;
+        cout << "       >> ";
+        cin >> choice;
+        cin.clear(); cin.ignore(INT_MAX,'\n');
+        switch (choice) {
+            case 1:{
+                cout << endl;
+                cout << "       Total de tabelas: " + to_string(database->getAmountTables()) <<endl;
+                cout << "       Primeira tabela: " + database->getFirstTable()->getName() <<endl;
+                break;
+            }
+            case 2:{
+                cout << endl;
+                cout << "       Digite o caminho do arquivo. Ex: \"/Users/Name/Documents/file.txt\" (X para sair)" << endl;
+                cout << "       >> ";
+                string path;
+                path = "";
+                cin >> path;
+                cin.clear(); cin.ignore(BC_STRING_MAX,'\n');
+                if (path.at(0) != 'X') {
+                    
+                }
+                break;
+            }
+            case 3:{
+                choice = -1;
+                cout << "  ---------------------------------------------------------------------------------------------------------------------- " << endl;
+                break;
+            }
+            default:{
+                cout << endl;
+                cout << "       Escolha inválida." <<endl;
+                cout << endl;
+                break;
+            }
+        }
+    }
+}
+
+void showMenuSearchTable(Table *table){
+    int choice = 0;
+    while(choice != -1) {
+        cout << "  ---------------------------------------------------------------------------------------------------------------------- " << endl;
+        cout << "       / Menu Principal / Tabelas / "+table->getName() << endl;
+        cout << endl;
+        cout << "       1. Listar informações da tabela " <<endl;
+        cout << "       2. Inserir registro " <<endl;
+        cout << "       3. Buscar registro" <<endl;
+        cout << "       4. Exibir registros PreOrdem" <<endl;
+        cout << "       5. Exibir registros InOrdem" <<endl;
+        cout << "       6. Exibir registros PosOrdem" <<endl;
+        cout << "       7. Exibir árvore de registros" <<endl;
+        cout << "       8. Voltar" <<endl;
+        cout << endl;
+        cout << "       >> ";
+        cin >> choice;
+        cin.clear(); cin.ignore(INT_MAX,'\n');
+        switch (choice) {
+            case 1:{
+                cout << endl;
+                cout << "       Total de registros: " + to_string(table->getAmountElements()) <<endl;
+                cout << "       Chave primária: " + table->getFirstAttribute()->getName() <<endl;
+                cout << "       Registro raiz: " + table->getRootElement()->getFirstField()->getValue() <<endl;
+                break;
+            }
+            case 2:{
+                
+                break;
+            }
+            case 3:{
+                cout << endl;
+                cout << "       Digite a chave do registro. (X para sair)" << endl;
+                cout << "       >> ";
+                string key;
+                key = "";
+                cin >> key;
+                cin.clear(); cin.ignore(BC_STRING_MAX,'\n');
+                Element *element = table->findElement(key);
+                cout << endl;
+                if (element != NULL) {
+                    element->printFields();
+                } else
+                    cout << "       Registro não existe na tabela." << endl;
+                break;
+            }
+            case 4:{
+                table->printElementsPreOrdem();
+                break;
+            }
+            case 5:{
+                table->printElementsInOrdem();
+                break;
+            }
+            case 6:{
+                table->printElementsPosOrdem();
+                break;
+            }
+            case 7:{
+                table->drawTree();
+                break;
+            }
+            case 8:{
+                choice = -1;
+                cout << "  ---------------------------------------------------------------------------------------------------------------------- " << endl;
+                break;
+            }
+            default:{
+                cout << endl;
+                cout << "       Escolha inválida." <<endl;
+                cout << endl;
+                break;
+            }
+        }
+    }
+}
+
+void showMenuTables(Database *database) {
+    int choice = 0;
+    while(choice != -1) {
+        cout << "  ---------------------------------------------------------------------------------------------------------------------- " << endl;
+        cout << "       / Menu Principal / Tabelas" << endl;
+        cout << endl;
+        cout << "       1. Listar tabelas" <<endl;
+        cout << "       2. Criar tabela" <<endl;
+        cout << "       3. Buscar tabela" <<endl;
+        cout << "       4. Voltar" <<endl;
+        cout << endl;
+        cout << "       >> ";
+        cin >> choice;
+        cin.clear(); cin.ignore(INT_MAX,'\n');
+        switch (choice) {
+            case 1:{
+                database->printTables();
+                break;
+            }
+            case 2:{
+                cout << endl;
+                cout << "       Digite o nome da tabela. (X para sair)" << endl;
+                cout << "       >> ";
+                string name;
+                name = "";
+                cin >> name;
+                cin.clear(); cin.ignore(INT_MAX,'\n');
+                if (name.at(0) != 'X') {
+                    Table *table = new Table(name);
+                    cout << endl;
+                    cout << "       Digite o atributo da tabela. (X para sair)" << endl;
+                    cout << "       >> ";
+                    string attribute;
+                    while (cin >> attribute) {
+                        cin.clear(); cin.ignore(BC_STRING_MAX,'\n');
+                        if (attribute.at(0) != 'X') {
+                            cout << endl;
+                            cout << "       É chave primária? (S ou N)" << endl;
+                            cout << "       >> ";
+                            char isPrimaryKey;
+                            cin >> isPrimaryKey;
+                            cin.clear(); cin.ignore(CHAR_MAX,'\n');
+                            if (isPrimaryKey == 'S')
+                                table->addAttribute(attribute, true);
+                            else
+                                table->addAttribute(attribute);
+                            cout << endl;
+                            cout << "       Digite o atributo da tabela. (X para sair)" << endl;
+                            cout << "       >> ";
+                        } else {
+                            break;
+                        }
+                    }
+                    if (table->getFirstAttribute() != NULL)
+                        database->addTable(table);
+                    else {
+                        cout << endl << "       A tabela deve conter pelo menos 1 atributo, portanto ela não foi criada. " << endl;
+                        delete table;
+                    }
+                    cin.clear();
+                } else
+                    cout << endl << "       A tabela não foi criada. " << endl;
+                break;
+            }
+            case 3:{
+                cout << endl;
+                cout << "       Digite o nome da tabela. (X para sair)" << endl;
+                cout << "       >> ";
+                string name;
+                name = "";
+                cin >> name;
+                cin.clear(); cin.ignore(INT_MAX,'\n');
+                if (name.at(0) != 'X') {
+                    Table *table = database->getTable(name);
+                    if (table != NULL)
+                        showMenuSearchTable(table);
+                    else
+                        cout << "       A tabela \"" + name +  "\" não existe." << endl;
+                }
+                break;
+            }
+            case 4:{
+                choice = -1;
+                cout << "  ---------------------------------------------------------------------------------------------------------------------- " << endl;
+                break;
+            }
+            default:{
+                cout << endl;
+                cout << "       Escolha inválida." <<endl;
+                cout << endl;
+                break;
+            }
+        }
+    }
+}
+
+void showMainMenu(Database *database){
+    int choice = 0;
+    while (choice != -1) {
+        cout << "       / Menu Principal" << endl;
+        cout << endl;
+        cout << "       1. Banco de dados" << endl;
+        cout << "       2. Tabelas" << endl;
+        cout << "       3. Sair" << endl;
+        cout << endl;
+        cout << "       >> ";
+        cin >> choice;
+        cin.clear(); cin.ignore(INT_MAX,'\n');
+        switch (choice) {
+            case 1:
+                showMenuDatabase(database);
+                break;
+            case 2:
+                showMenuTables(database);
+                break;
+            case 3:
+                choice = -1;
+                cout << "  ---------------------------------------------------------------------------------------------------------------------- " << endl;
+                break;
+            default:
+                cout << endl;
+                cout << "       Escolha inválida." <<endl;
+                cout << endl;
+                break;
+        }
+    }
+}
+
+
 int main(int argc, const char * argv[]) {
+    
     // insert code here...
 //    std::cout << "Hello, World!\n";
   
@@ -199,45 +463,48 @@ int main(int argc, const char * argv[]) {
 //    Element element;
     Database database;
     
-//    int count = 1;
-//    for(int i=0; i<3; i++){//tabelas
-//        Table *table = new Table("table"+to_string(i));
-//        table->addAttribute("attribute"+to_string(i+count));
-//        count++;
-//        table->addAttribute("attribute"+to_string(i+count));
-//        count++;
-//        table->addAttribute("attribute"+to_string(i+count));
-//        count++;
-//        
-//        int count2 = 1;
-//        for(int j=0; j<40; j++){
-//            Element *element = new Element();
-//            element->addField("campo"+to_string(j), "valor"+to_string(j));
-//            count2++;
-//            element->addField("campo"+to_string(j+count2), "valor"+to_string(j+count2));
-//            count2++;
-//            element->addField("campo"+to_string(j+count2), "valor"+to_string(j+count2));
-//            count2++;
-//            table->addElement(element);
-//            element = NULL;
-//        }
+    int count = 1;
+    for(int i=0; i<3; i++){//tabelas
+        Table *table = new Table("table"+to_string(i));
+        table->addAttribute("attribute"+to_string(i+count));
+        count++;
+        table->addAttribute("attribute"+to_string(i+count));
+        count++;
+        table->addAttribute("attribute"+to_string(i+count));
+        count++;
+        
+        int count2 = 1;
+        for(int j=0; j<40; j++){
+            Element *element = new Element();
+            element->addField("campo"+to_string(j), "valor"+to_string(j));
+            count2++;
+            element->addField("campo"+to_string(j+count2), "valor"+to_string(j+count2));
+            count2++;
+            element->addField("campo"+to_string(j+count2), "valor"+to_string(j+count2));
+            count2++;
+            table->addElement(element);
+            element = NULL;
+        }
 //        table->drawTree();
-//        database.addTable(table);
-//    }
-    
-    Table *table = new Table("table");
-    table->addAttribute("attribute1");
-    table->addAttribute("attribute2");
-    table->addAttribute("attribute3");
-    
-    int count2 = 0;
-    for(int j=0; j<500; j++){
-        Element *element = new Element();
-        element->addField("campo"+to_string(j), "valor"+to_string(j));
-        table->addElement(element);
-        element = NULL;
+        database.addTable(table);
     }
-    table->drawTree();
+    
+    showHeader();
+    showMainMenu(&database);
+    
+//    Table *table = new Table("table");
+//    table->addAttribute("attribute1");
+//    table->addAttribute("attribute2");
+//    table->addAttribute("attribute3");
+//    
+//    int count2 = 0;
+//    for(int j=0; j<500; j++){
+//        Element *element = new Element();
+//        element->addField("campo"+to_string(j), "valor"+to_string(j));
+//        table->addElement(element);
+//        element = NULL;
+//    }
+//    table->drawTree();
     
     
     
@@ -303,8 +570,8 @@ int main(int argc, const char * argv[]) {
     
 //    table->drawTree();
 //    table->removeElement("valor3");
-    cout << endl;
-    cout << endl;
+//    cout << endl;
+//    cout << endl;
 //    table->drawTree();
     
 //    string val = "SD02";

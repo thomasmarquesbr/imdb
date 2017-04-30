@@ -72,6 +72,21 @@ void Table::addAttribute(string name){
     }
 }
 
+void Table::addAttribute(string name, bool isPrimaryKey){
+    Attribute *newAttribute = new Attribute(name, isPrimaryKey);
+    if (this->firstAttribute == NULL) {
+        firstAttribute = newAttribute;
+        lastAttribute = newAttribute;
+    } else {
+        lastAttribute->setNext(newAttribute);
+        lastAttribute = newAttribute;
+    }
+}
+
+Attribute* Table::getFirstAttribute() {
+    return this->firstAttribute;
+}
+
 void Table::setNextTable(Table *newTable){
     this->nextTable = newTable;
 }
@@ -265,10 +280,11 @@ Element* Table::findElement(string key) {
 }
 
 void Table::printElementsPreOrdem(){
+    cout << "       ";
     if (this->rootElement != NULL)
         readInOrdem(this->rootElement);
     else
-        cout << "tabela vazia";
+        cout << "       Tabela vazia.";
     cout << endl;
 }
 
@@ -280,10 +296,11 @@ void Table::readPreOrdem(Element*& node){
 }
 
 void Table::printElementsInOrdem(){
+    cout << "       ";
     if (this->rootElement != NULL)
         readInOrdem(this->rootElement);
     else
-        cout << "tabela vazia";
+        cout << "       Tabela vazia";
     cout << endl;
 }
 
@@ -295,10 +312,11 @@ void Table::readInOrdem(Element*& node) {
 }
 
 void Table::printElementsPosOrdem() {
+    cout << "       ";
     if (this->rootElement != NULL)
         readInOrdem(this->rootElement);
     else
-        cout << "tabela vazia";
+        cout << "       Tabela vazia";
     cout << endl;
 }
 

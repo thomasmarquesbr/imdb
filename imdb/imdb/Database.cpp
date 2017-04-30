@@ -60,9 +60,10 @@ void Database::addTable(Table *newTable){
             lastTable = newTable;
         }
         amountTables++;
+        cout << "       Tabela criada com sucesso." << endl;
     } else { //ja existe
-        cout << "Falha ao criar tabela!"<<endl;
-        cout << "A tabela " << newTable->getName() << "ja existe" << endl;
+        cout << "       Falha ao criar tabela!"<<endl;
+        cout << "       A tabela " << newTable->getName() << "ja existe" << endl;
     }
 }
 
@@ -85,6 +86,22 @@ void Database::removeTable(string name){
                 amountTables--;
                 break;
             }
+    }
+}
+
+void Database::printTables() {
+    Table *aux = this->firstTable;
+    string names = "";
+    while (aux != NULL) {
+        names+= " " + aux->getName() + ",";
+        aux = aux->getNextTable();
+    }
+    if (names.empty()) {
+        cout << "       Não existem tabelas no banco" <<endl;
+    } else {
+        names = "       R." + names.substr(0, names.size()-1) + ".";
+        cout << endl;
+        cout << names << endl;
     }
 }
 

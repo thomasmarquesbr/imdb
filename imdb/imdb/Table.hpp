@@ -46,6 +46,8 @@ public:
     Element* getRootElement();
     Table* getNextTable();
     void addAttribute(string name);
+    void addAttribute(string name, bool isPrimaryKey);
+    Attribute* getFirstAttribute();
     void setNextTable(Table *newTable);
     void printAttributes();
     
