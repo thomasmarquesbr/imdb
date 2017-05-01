@@ -8,10 +8,18 @@
 
 #include "Attribute.hpp"
 
+/* PRIVATE METHODS */
+
+void Attribute::clear(){
+    this->name.clear();
+}
+
+/* PUBLIC METHODS */
+
 Attribute::Attribute(string name){
+    this->primaryKey = false;
     this->name = name;
     this->next = NULL;
-    this->primaryKey = false;
 }
 
 Attribute::Attribute(string name, bool isPrimaryKey){
@@ -20,12 +28,16 @@ Attribute::Attribute(string name, bool isPrimaryKey){
     this->primaryKey = isPrimaryKey;
 }
 
-string Attribute::getName(){
-    return this->name;
+Attribute::~Attribute(){
+    this->clear();
 }
 
 bool Attribute::isPrimarykey(){
     return this->primaryKey;
+}
+
+string Attribute::getName(){
+    return this->name;
 }
 
 Attribute* Attribute::getNext(){
@@ -38,7 +50,4 @@ void Attribute::setNext(Attribute *attribute){
 
 void Attribute::setPrimaryKey(bool value){
     this->primaryKey = value;
-}
-
-void Attribute::clear(){
 }

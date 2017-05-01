@@ -11,10 +11,23 @@
 #include <cmath>
 #include "Field.hpp"
 
+/* PRIVATE METHODS */
+
+void Field::clear(){
+    this->name.clear();
+    this->value.clear();
+}
+
+/* PUBLIC METHODS */
+
 Field::Field(string name, string value){
     this->name = name;
     this->value = value;
     this->next = NULL;
+}
+
+Field::~Field(){
+    this->clear();
 }
 
 string Field::getName(){
@@ -35,7 +48,4 @@ void Field::setValue(string value){
 
 void Field::setNext(Field *field){
     this->next = field;
-}
-
-void Field::clear(){
 }

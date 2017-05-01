@@ -16,19 +16,22 @@ using namespace std;
 
 class Attribute{
 private:
-    string name;
     bool primaryKey;
+    string name;
     Attribute *next;
     
+    void clear();
 public:
     Attribute(string);
     Attribute(string, bool);
-    string getName();
+    ~Attribute();
+    
     bool isPrimarykey();
+    string getName();
     Attribute* getNext();
+    
     void setNext(Attribute *attribute);
     void setPrimaryKey(bool value);
-    void clear();
 };
 
 #endif /* Attribute_hpp */

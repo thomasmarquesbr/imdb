@@ -26,10 +26,8 @@ private:
     void singleRotation(Element*& element, Direction direction);
     void doubleRotation(Element*& element, Direction direction);
     void rebalanceInsert(Element*& element, Direction direction, bool& heightChanged);
-    void rebalanceRemove(Element*& element, Direction direction, bool& heightChanged);
     void updateBalance(Element* element, Direction direction);
     void addElement(Element *newElement, Element*& currentElement, bool& heightChanged);
-    bool removeElement(const string& key, Element*& currentElement, bool& heightChanged);
     void applyPrimaryKeyInElements(Element *element);
     void readPreOrdem(Element*& node);
     void readInOrdem(Element*& node);
@@ -40,23 +38,23 @@ private:
 public:
     Table(string name);
     ~Table();
+    
     bool empty();
     bool validateAttributes(vector<string> *attributes);
+    bool existPrimaryKey();
     int getAmountElements();
     string getName();
+    Attribute* getFirstAttribute();
     Element* getRootElement();
+    Element* findElement(string key);
     Table* getNextTable();
+    
     void addAttribute(string name);
     void addAttribute(string name, bool isPrimaryKey);
-    Attribute* getFirstAttribute();
     void setNextTable(Table *newTable);
     void printAttributes();
     void applyPrimaryKey(vector<string> attribs);
-    
     void addElement(Element *newElement);
-    bool removeElement(string key);
-    Element* findElement(string key);
-    
     void printElementsPreOrdem();
     void printElementsInOrdem();
     void printElementsPosOrdem();

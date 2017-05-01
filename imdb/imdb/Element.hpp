@@ -21,20 +21,22 @@ enum Direction {
 
 class Element{
 private:
+    unsigned short balance;
     int amountFields;
     int height;
     string key;
     Field *firstField;
     Field *lastField;
-    unsigned short balance;
     Element *subTreeElement[2];
     
     void clear();
 public:
     Element();
     ~Element();
+    
     bool empty();
     bool existField(string name);
+    int getBalance();
     int getAmountFields();
     string getKey();
     Field* getFirstField();
@@ -43,8 +45,8 @@ public:
     Element*& getSubTreeElement(int direction);
     Element*& getLeftElement();
     Element*& getRightElement();
+    
     void setPrimaryKey(Attribute *attrib);
-    int getBalance();
     void setSubTreeElement(Element*& element, int direction);
     void setBalance(unsigned short balance);
     void addField(string name, string value);

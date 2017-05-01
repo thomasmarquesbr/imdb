@@ -10,6 +10,21 @@
 #include <string>
 #include "Element.hpp"
 
+/* PRIVATE METHODS */
+
+void Element::clear(){
+    Field *aux = this->firstField;
+    while (aux != NULL) {
+        this->key.clear();
+        firstField = firstField->getNext();
+        delete aux;
+        aux = firstField;
+    }
+    lastField = NULL;
+}
+
+/* PUBLIC METHODS */
+
 Element::Element(){
     this->height = 0;
     this->balance = EQUAL;
@@ -34,6 +49,10 @@ bool Element::existField(string name){
         return false;
     else
         return true;
+}
+
+int Element::getBalance(){
+    return this->balance;
 }
 
 int Element::getAmountFields(){
@@ -77,6 +96,41 @@ Element*& Element::getRightElement(){
     return this->subTreeElement[RIGHT];
 }
 
+void Element::setPrimaryKey(Attribute *attrib){
+    this->key = "";
+    Attribute *auxAttrib = attrib;
+    while(auxAttrib != NULL){
+        if((auxAttrib->isPrimarykey()) && (this->getField(auxAttrib->getName()) != NULL))
+            this->key += this->getField(auxAttrib->getName())->getValue();
+        auxAttrib = auxAttrib->getNext();
+    }
+}
+
+void Element::setSubTreeElement(Element *&element, int direction){
+    this->subTreeElement[direction] = element;
+}
+
+void Element::setBalance(unsigned short balance){
+    this->balance = balance;
+}
+
+void Element::addField(string name, string value){
+    Field* field = getField(name);
+    if (field == NULL){//não existe
+        Field* newField = new Field(name, value);
+        if (empty()) {
+            firstField = newField;
+            lastField = newField;
+        } else {
+            lastField->setNext(newField);
+            lastField = newField;
+        }
+        amountFields++;
+    } else { //atualiza o valor do campo
+        field->setValue(value);
+    }
+}
+
 void Element::removeField(string name){
     Field* prevField = firstField;
     Field* currField = firstField;
@@ -99,64 +153,16 @@ void Element::removeField(string name){
     }
 }
 
-int Element::getBalance(){
-    return this->balance;
-}
-
-void Element::setPrimaryKey(Attribute *attrib){
-    this->key = "";
-    Attribute *auxAttrib = attrib;
-    while(auxAttrib != NULL){
-        if(auxAttrib->isPrimarykey())
-            this->key += this->getField(auxAttrib->getName())->getValue();
-        auxAttrib = auxAttrib->getNext();
-    }
-}
-
-void Element::setBalance(unsigned short balance){
-    this->balance = balance;
-}
-
-void Element::setSubTreeElement(Element *&element, int direction){
-    this->subTreeElement[direction] = element;
-}
-
-void Element::addField(string name, string value){
-    Field* field = getField(name);
-    if (field == NULL){//não existe
-        Field* newField = new Field(name, value);
-        if (empty()) {
-            firstField = newField;
-            lastField = newField;
-        } else {
-            lastField->setNext(newField);
-            lastField = newField;
-        }
-        amountFields++;
-    } else { //atualiza o valor do campo
-        field->setValue(value);
-    }
-}
-
 void Element::printFields(){
     Field* field = firstField;
     if(empty())
         cout << "       Os campos do elemento não existem! \n";
     else{
+        cout << "       Chave primária: " << this->key << endl;
         while(field) {
             cout << "       "+ field->getName() << ": " << field->getValue() << endl;
             field = field->getNext();
         }
         cout << endl;
     }
-}
-
-void Element::clear(){
-    Field *aux = this->firstField;
-    while (aux != NULL) {
-        firstField = firstField->getNext();
-        delete aux;
-        aux = firstField;
-    }
-    lastField = NULL;
 }

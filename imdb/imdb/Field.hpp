@@ -20,15 +20,17 @@ private:
     string value;
     Field *next;
     
+    void clear();
 public:
     Field(string, string);
+    ~Field();
+    
     string getName();
     string getValue();
-    int getValueInt();
     Field* getNext();
+    
     void setValue(string value);
     void setNext(Field *field);
-    void clear();
 };
 
 #endif /* Field_hpp */
