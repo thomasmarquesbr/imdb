@@ -34,6 +34,7 @@ public:
     void addTable(Table *newTable);
     void removeTable(string name);
     void clear();
+    void rFile(string path);
     void readFile(string path);
 };
 

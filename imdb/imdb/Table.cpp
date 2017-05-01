@@ -100,7 +100,7 @@ void Table::printAttributes(){
     if (aux != NULL) {
         cout << "Atributos: ";
         while (aux) {
-            cout << aux->getName() << ", ";
+            cout << aux->getName() << ((aux->isPrimarykey()) ? " PK, " : ", ");
             aux = aux->getNext();
         }
         cout<<endl;

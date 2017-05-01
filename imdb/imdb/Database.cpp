@@ -182,12 +182,143 @@ void Database::clear(){
     lastTable = NULL;
 }
 
+void Database::rFile(string path){
+    vector<vector<string>> createTables;
+    vector<vector<vector<string>>> copyTables;
+    vector<vector<string>> alterTables;
+    string line;
+    ifstream myFile(path);
+    if (myFile.is_open()){
+        cout << endl;
+        while(getline(myFile,line)){
+            vector<vector<string>> listTables;
+            if (isdigit(*line.begin()) || isalpha(*line.begin()) || line.substr(0,2) == "\\." || line.substr(0,2) == ");") {
+                vector<string> words;
+                split(line, words);
+                if ((*words.begin() == "CREATE") && (words[1] == "TABLE")) { //Criando tabelas
+                    cout << "       Lendo informações de criação de tabelas..." << endl;
+                    vector<string> table;
+                    table.push_back(words[2]);//nameTable
+                    while(line.substr(0,2) != ");"){
+                        getline(myFile, line);
+                        vector<string> words;
+                        split(line, words);
+                        for (vector<string>::iterator field=words.begin(); field!=words.end(); ++field) {
+                            if ((*field != "")&&(*field != ");")) {
+                                table.push_back(removeCharsFromString(*field, "\"")); // name atributes
+                                break;
+                            }
+                        }
+                    }
+                    createTables.push_back(table);
+                } else if (*words.begin() == "COPY") {//populando tabelas
+                    cout << "       Lendo informações de registros..." << endl;
+                    vector<string> table;
+                    table.push_back(words[1]);
+                    vector<string>::iterator field = words.begin()+2;
+                    while (field != words.end() - 2){
+                        table.push_back(removeCharsFromString(*field, "\"(,)"));
+                        ++field;
+                    }
+                    listTables.push_back(table);
+                    while (getline(myFile, line)){
+                        if (line.substr(0,2) == "\\.")
+                            break;
+                        istringstream iss(line);
+                        string value;
+                        vector<string>::iterator itAttrib = table.begin()+1;
+                        vector<string> values;
+                        while(getline(iss, value, '\t')){
+                            if (!value.empty()){
+                                string nameAtrrib = *itAttrib;
+                                values.push_back(trim(value));
+                                ++itAttrib;
+                            }
+                        }
+                        listTables.push_back(values);
+                    }
+                    copyTables.push_back(listTables);
+                } else if (*words.begin() == "ALTER") {//Aplicando PrimaryKey
+                    cout << "       Lendo informações adicionais sobre as tabelas..." << endl;
+                    vector<string> table;
+                    string nameTable = words[3];
+                    getline(myFile, line);
+                    vector<string> words;
+                    split(line, words);
+                    bool mustRead = false;
+                    for(vector<string>::iterator word=words.begin(); word != words.end(); word++){
+                        if ((*word == "PRIMARY")||(mustRead)) {
+                            if (!mustRead){
+                                word += 2;
+                                table.push_back(nameTable);
+                            }
+                            mustRead = true;
+                            table.push_back(removeCharsFromString(*word, "\"(,);"));//attrib primary Key
+                        }
+                    }
+                    if (mustRead)
+                        alterTables.push_back(table);
+                }
+            }
+        }
+        myFile.close();
+    } else {
+        cout << "       Falha ao abrir o arquivo!" << endl;
+    }
+    cout << "       Criando tabelas..." << endl;
+    for(vector<vector<string>>::iterator table = createTables.begin(); table != createTables.end(); table++){
+        Table *t = nullptr;
+        for(vector<string>::iterator value = table->begin(); value != table->end(); value++){
+            if (value == table->begin())//nome da tabela
+                t = new Table(*value);
+            else
+                t->addAttribute(*value);
+        }
+        this->addTable(t);
+    }
+    cout << "       Aplicando chaves primárias..." << endl;
+    for(vector<vector<string>>::iterator table=alterTables.begin(); table != alterTables.end(); table++){
+        vector<string> attribs;
+        string nameTable = *table->begin();
+        for(vector<string>::iterator value = ++table->begin(); value != table->end(); value++){
+            attribs.push_back(*value);
+        }
+        this->getTable(nameTable)->applyPrimaryKey(attribs);
+    }
+    cout << "       Inserindo registros na tabela..." << endl;
+//    for(vector<vector<vector<string>>>::iterator it=copyTables.begin(); it != copyTables.end(); it++){
+//        string nameTable;
+//        vector<string> attribs;
+//        for(vector<vector<string>>::iterator i=it->begin(); i != it->end(); i++){
+//            if (i == it->begin()){
+////                cout << *i->begin() << endl;
+//                nameTable = *i->begin();
+//                for(vector<string>::iterator value = ++i->begin(); value != i->end(); value++){
+////                    cout <<*value << endl;
+//                    attribs.push_back(*value);
+//                }
+//            } else {
+//                Element *element = new Element();
+//                int count = 0;
+//                for(vector<string>::iterator value = i->begin(); value != i->end(); value++){
+////                    cout << *value << endl;
+//                    element->addField(attribs[count], *value);
+//                    element->setPrimaryKey(this->getTable(nameTable)->getFirstAttribute());
+////                    cout << attribs[count] << "  " <<*value << endl;
+//                    count++;
+//                }
+//                this->getTable(nameTable)->addElement(element);
+//            }
+//        }
+//    }
+    cout << "       Finalizado." << endl;
+}
+
 void Database::readFile(string path) {
     string line;
     ifstream myFile(path);
     if (myFile.is_open()){
         while (getline(myFile,line)) {
-            
             if (isdigit(*line.begin()) || isalpha(*line.begin()) || line.substr(0,2) == "\\." || line.substr(0,2) == ");") {
                 //cout<<line<<endl;
                 vector<string> words;
@@ -236,7 +367,6 @@ void Database::readFile(string path) {
                             }
                             cout << "       Elementos adicionados na tabela \"" << table->getName() << "\"." << endl;
                         }
-                    //Copiar da antiga pra cá
                     } else
                         cout << "       Tentando inserir registros na tabela \"" + name_table + "\" que não existe no banco." << endl;
                 } else if (*words.begin() == "ALTER") {//Aplicando PrimaryKey
