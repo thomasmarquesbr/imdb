@@ -19,6 +19,7 @@ private:
     int amountTables;
     
     void split(const std::string& str, std::vector<std::string>& v);
+    string trim(std::string & str);
     string removeCharsFromString(const string str, char* charsToRemove);
     void print(vector<string> list);
 public:

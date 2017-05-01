@@ -24,12 +24,20 @@ string Attribute::getName(){
     return this->name;
 }
 
+bool Attribute::isPrimarykey(){
+    return this->primaryKey;
+}
+
 Attribute* Attribute::getNext(){
     return this->next;
 }
 
 void Attribute::setNext(Attribute *attribute){
     this->next = attribute;
+}
+
+void Attribute::setPrimaryKey(bool value){
+    this->primaryKey = value;
 }
 
 void Attribute::clear(){

@@ -7,21 +7,21 @@
 //
 
 #include <iostream>
+#include <string>
 #include "Element.hpp"
 
 Element::Element(){
     this->height = 0;
     this->balance = EQUAL;
+    this->key = "";
     this->firstField = NULL;
     this->lastField = NULL;
     this->amountFields = 0;
     this->subTreeElement[LEFT] = NULL;
     this->subTreeElement[RIGHT] = NULL;
-//    this->leftElement = NULL;
-//    this->rightElement = NULL;
 }
 
-Element::~Element() {
+Element::~Element(){
     this->clear();
 }
 
@@ -38,6 +38,10 @@ bool Element::existField(string name){
 
 int Element::getAmountFields(){
     return this->amountFields;
+}
+
+string Element::getKey(){
+    return this->key;
 }
 
 Field* Element::getFirstField(){
@@ -61,7 +65,7 @@ Field* Element::getField(string name){
     return field;
 }
 
-Element*& Element::getSubTreeElement(int direction) {
+Element*& Element::getSubTreeElement(int direction){
     return this->subTreeElement[direction];
 }
 
@@ -95,19 +99,29 @@ void Element::removeField(string name){
     }
 }
 
-int Element::getBalance() {
+int Element::getBalance(){
     return this->balance;
 }
 
-void Element::setBalance(unsigned short balance) {
+void Element::setPrimaryKey(Attribute *attrib){
+    this->key = "";
+    Attribute *auxAttrib = attrib;
+    while(auxAttrib != NULL){
+        if(auxAttrib->isPrimarykey())
+            this->key += this->getField(auxAttrib->getName())->getValue();
+        auxAttrib = auxAttrib->getNext();
+    }
+}
+
+void Element::setBalance(unsigned short balance){
     this->balance = balance;
 }
 
-void Element::setSubTreeElement(Element *&element, int direction) {
+void Element::setSubTreeElement(Element *&element, int direction){
     this->subTreeElement[direction] = element;
 }
 
-void Element::addField(string name, string value) {
+void Element::addField(string name, string value){
     Field* field = getField(name);
     if (field == NULL){//não existe
         Field* newField = new Field(name, value);

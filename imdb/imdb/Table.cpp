@@ -9,6 +9,8 @@
 #include <iostream>
 #include <cstdlib>
 #include <cmath>
+#include <vector>
+#include <string>
 #include "Table.hpp"
 
 Table::Table(string name){
@@ -28,19 +30,21 @@ bool Table::empty(){
     return (rootElement == NULL);
 }
 
-bool Table::validateAttributes(Attribute *attribute){
+bool Table::validateAttributes(vector<string> *attributes){
     Attribute *aux = this->firstAttribute;
-    Attribute *testAttribute = attribute;
-    while(testAttribute){
-        while (aux) {
-            if (aux->getName().compare(testAttribute->getName()) != 0){
-                aux = aux->getNext();
-                if (aux == NULL)
-                    return false;
-            } else {
-                testAttribute = testAttribute->getNext();
-            }
-        }
+    vector<string>::iterator attrib = attributes->begin();
+    while (aux) {
+        if (aux->getName() == *attrib) {
+            aux = this->firstAttribute;
+            attrib++;
+        } else
+            aux = aux->getNext();
+    }
+    if (attrib == attributes->end())
+        return true;
+    else {
+        cout << "       O atributo \"" << *attrib << "\" não existe na tabela \"" << this->name << "\"." << endl;
+        return false;
     }
     return true;
 }
@@ -102,7 +106,28 @@ void Table::printAttributes(){
         cout<<endl;
     } else
         cout << "Não existem atributos na tabela " << this->getName() << endl;
-            
+}
+
+void Table::applyPrimaryKey(vector<string> attribs){
+    Attribute *aux = this->firstAttribute;
+    vector<string>::iterator attrib = attribs.begin();
+    while (aux) {
+        if (aux->getName() == *attrib) {
+            aux->setPrimaryKey(true);
+            aux = this->firstAttribute;
+            attrib++;
+        } else
+            aux = aux->getNext();
+    }
+    if (attrib != attribs.end())
+        cout << "       O atributo \"" << *attrib << "\" não existe na tabela \"" << this->name << "\"." << endl;
+}
+
+void Table::applyPrimaryKeyInElements(Element *element){
+    if (element == NULL) return;
+    element->setPrimaryKey(this->firstAttribute);
+    if (element->getLeftElement() != NULL) applyPrimaryKeyInElements(element->getLeftElement());
+    if (element->getRightElement() != NULL) applyPrimaryKeyInElements(element->getRightElement());
 }
 
 Direction Table::getOpposite(Direction direction) {
@@ -328,7 +353,6 @@ void Table::readPosOrdem(Element*& node) {
 }
 
 void Table::drawTree() {
-    cout << endl << "       ";
     drawTree(this->rootElement, 0);
 }
 

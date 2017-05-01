@@ -510,7 +510,7 @@ COPY fd_group (fdgrp_cd, fddrp_desc) FROM stdin;
 --
 
 ALTER TABLE ONLY data_src
-    ADD CONSTRAINT data_src_pkey PRIMARY KEY (datasrc_id);
+    ADD CONSTRAINT data_src_pkey PRIMARY KEY (datasrc_id, authors);
     
 --
 -- Name: deriv_cd_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 

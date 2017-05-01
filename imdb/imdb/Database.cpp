@@ -40,6 +40,14 @@ void Database::split(const std::string& str, std::vector<std::string>& v) {
     }
 }
 
+string Database::trim(std::string & str){
+    size_t first = str.find_first_not_of(' ');
+    if (first == string::npos)
+        return "";
+    size_t last = str.find_last_not_of(' ');
+    return str.substr(first, (last-first+1));
+}
+
 string Database::removeCharsFromString(const string str, char* charsToRemove) {
     char c[str.length()+1]; 
     const char *p = str.c_str();
@@ -119,7 +127,7 @@ void Database::addTable(Table *newTable){
             lastTable = newTable;
         }
         amountTables++;
-        cout << "       Tabela criada com sucesso." << endl;
+        cout << "       Tabela " + newTable->getName() + " criada com sucesso." << endl;
     } else { //ja existe
         cout << "       Falha ao criar tabela!"<<endl;
         cout << "       A tabela " << newTable->getName() << "ja existe" << endl;
@@ -181,10 +189,11 @@ void Database::readFile(string path) {
         while (getline(myFile,line)) {
             
             if (isdigit(*line.begin()) || isalpha(*line.begin()) || line.substr(0,2) == "\\." || line.substr(0,2) == ");") {
-                //                cout<<line<<endl;
+                //cout<<line<<endl;
                 vector<string> words;
                 split(line, words);
                 if (*words.begin() == "CREATE") { //Criando tabelas
+                    Table *table = new Table(words[2]);
                     while(line.substr(0,2) != ");"){
                         getline(myFile, line);
                         vector<string> words;
@@ -192,30 +201,63 @@ void Database::readFile(string path) {
                         for (vector<string>::iterator field=words.begin(); field!=words.end(); ++field) {
                             if ((*field != "")&&(*field != ");")) {
                                 string name_attrib = removeCharsFromString(*field, "\"");
+                                table->addAttribute(name_attrib);
                                 break;
                             }
                         }
                     }
+                    this->addTable(table);
                 } else if (*words.begin() == "COPY") {//populando tabelas
                     string name_table = words[1];
-                    vector<string> attribs;
-                    vector<string>::iterator field = words.begin()+2;
-                    while (field != words.end() - 2){
-                        attribs.push_back(removeCharsFromString(*field, "\"(,)"));
-                        ++field;
-                    }
-                    while (getline(myFile, line)){
-                        if (line.substr(0,2) == "\\.")
-                            break;
-                        istringstream iss(line);
-                        string value;
-                        while(getline(iss, value, '\t')){
-                            if (!value.empty()){
-                                
+                    Table *table = this->getTable(name_table);
+                    if (table != NULL) {
+                        vector<string> attribs;
+                        vector<string>::iterator field = words.begin()+2;
+                        while (field != words.end() - 2){
+                            attribs.push_back(removeCharsFromString(*field, "\"(,)"));
+                            ++field;
+                        }
+                        if (table->validateAttributes(&attribs)){
+                            while (getline(myFile, line)){
+                                if (line.substr(0,2) == "\\.")
+                                    break;
+                                istringstream iss(line);
+                                string value;
+                                Element *element = new Element();
+                                vector<string>::iterator itAttrib = attribs.begin();
+                                while(getline(iss, value, '\t')){
+                                    if (!value.empty()){
+                                        string nameAtrrib = *itAttrib;
+                                        element->addField(trim(nameAtrrib), trim(value));
+                                        ++itAttrib;
+                                    }
+                                }
+                                table->addElement(element);
                             }
+                            cout << "       Elementos adicionados na tabela \"" << table->getName() << "\"." << endl;
+                        }
+                    //Copiar da antiga pra cá
+                    } else
+                        cout << "       Tentando inserir registros na tabela \"" + name_table + "\" que não existe no banco." << endl;
+                } else if (*words.begin() == "ALTER") {//Aplicando PrimaryKey
+                    string name_table = words[3];
+                    Table *table = this->getTable(name_table);
+                    getline(myFile, line);
+                    vector<string> words;
+                    vector<string> attribs;
+                    split(line, words);
+                    bool mustRead = false;
+                    for(vector<string>::iterator word=words.begin(); word != words.end(); word++){
+                        if ((*word == "PRIMARY")||(mustRead)) {
+                            if (!mustRead)
+                                word += 2;
+                            mustRead = true;
+                            attribs.push_back(removeCharsFromString(*word, "\"(,);"));
                         }
                     }
-                    //Copiar da antiga pra cá
+                    if (attribs.size() > 0)
+                        table->applyPrimaryKey(attribs);
+                    
                 }
                 
             }

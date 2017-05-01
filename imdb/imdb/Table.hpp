@@ -30,6 +30,7 @@ private:
     void updateBalance(Element* element, Direction direction);
     void addElement(Element *newElement, Element*& currentElement, bool& heightChanged);
     bool removeElement(const string& key, Element*& currentElement, bool& heightChanged);
+    void applyPrimaryKeyInElements(Element *element);
     void readPreOrdem(Element*& node);
     void readInOrdem(Element*& node);
     void readPosOrdem(Element*& node);
@@ -40,7 +41,7 @@ public:
     Table(string name);
     ~Table();
     bool empty();
-    bool validateAttributes(Attribute *attribute);
+    bool validateAttributes(vector<string> *attributes);
     int getAmountElements();
     string getName();
     Element* getRootElement();
@@ -50,6 +51,7 @@ public:
     Attribute* getFirstAttribute();
     void setNextTable(Table *newTable);
     void printAttributes();
+    void applyPrimaryKey(vector<string> attribs);
     
     void addElement(Element *newElement);
     bool removeElement(string key);
