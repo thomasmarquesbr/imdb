@@ -26,7 +26,6 @@ void Element::clear(){
 /* PUBLIC METHODS */
 
 Element::Element(){
-    this->height = 0;
     this->balance = EQUAL;
     this->key = "";
     this->firstField = NULL;
@@ -71,7 +70,7 @@ Field* Element::getLastField(){
     return this->lastField;
 }
 
-Field* Element::getField(string name){
+Field* Element::getField(string name){ //percorre os campos até encontrar o Field, se não existir retorna NULL
     Field* field = firstField;
     if (!empty()){
         while (field){
@@ -96,7 +95,7 @@ Element*& Element::getRightElement(){
     return this->subTreeElement[RIGHT];
 }
 
-void Element::setPrimaryKey(Attribute *attrib){
+void Element::setPrimaryKey(Attribute *attrib){//concatena os campos que compõem a primary key
     this->key = "";
     Attribute *auxAttrib = attrib;
     while(auxAttrib != NULL){

@@ -11,6 +11,7 @@
 #include <cmath>
 #include <vector>
 #include <string>
+#include "time.h"
 #include "Table.hpp"
 
 /* PRIVATE METHODS */
@@ -19,7 +20,7 @@ Direction Table::getOpposite(Direction direction){
     return (direction == RIGHT) ? LEFT : RIGHT;
 }
 
-void Table::singleRotation(Element *&element, Direction direction){
+void Table::singleRotation(Element *&element, Direction direction){ //executa a rotação simples na direção passada por parâmetro
     int opposite = this->getOpposite(direction);
     Element* child = element->getSubTreeElement(direction);
     element->setSubTreeElement(child->getSubTreeElement(opposite), direction);
@@ -27,7 +28,7 @@ void Table::singleRotation(Element *&element, Direction direction){
     element = child;
 }
 
-void Table::doubleRotation(Element *&element, Direction direction){
+void Table::doubleRotation(Element *&element, Direction direction){ //executa a rotação dupla na direção passada por parâmetro
     int opposite = this->getOpposite(direction);
     Element* child = element->getSubTreeElement(direction)->getSubTreeElement(opposite);
     element->getSubTreeElement(direction)->setSubTreeElement(child->getSubTreeElement(direction), opposite);
@@ -39,7 +40,7 @@ void Table::doubleRotation(Element *&element, Direction direction){
     element = child;
 }
 
-void Table::rebalanceInsert(Element*& element, Direction direction, bool& heightChanged){
+void Table::rebalanceInsert(Element*& element, Direction direction, bool& heightChanged){ //rebalanceia a subárvore após a inserção de um elemento
     int opposite = this->getOpposite(direction);
     if (element->getBalance() == direction) {
         if (element->getSubTreeElement(direction)->getBalance() == direction) {
@@ -59,7 +60,7 @@ void Table::rebalanceInsert(Element*& element, Direction direction, bool& height
     }
 }
 
-void Table::updateBalance(Element* element, Direction direction){
+void Table::updateBalance(Element* element, Direction direction){ //atualiza o fator de balanceamento após uma operação na subárvore
     int opposite = this->getOpposite(direction);
     int bal = element->getSubTreeElement(direction)->getSubTreeElement(opposite)->getBalance();
     if (bal == direction) {
@@ -75,18 +76,18 @@ void Table::updateBalance(Element* element, Direction direction){
     element->getSubTreeElement(direction)->getSubTreeElement(opposite)->setBalance(EQUAL);
 }
 
-void Table::addElement(Element *newElement, Element*& currentElement, bool& heightChanged){
+void Table::addElement(Element *newElement, Element*& currentElement, bool& heightChanged){ //insere o elemento subárvore, recursivamente
     if (currentElement == NULL) {
         currentElement = newElement;
         heightChanged = true;
         this->amountElements++;
     } else if (currentElement->getKey().compare(
-                                                newElement->getKey()) == 0) { //já existe
+                    newElement->getKey()) == 0) { //já existe
         cout << "Elemento " << currentElement->getKey() << " ja existe na tabela " << this->getName();
         return;
     } else {
         Direction direction = (newElement->getKey().compare(
-                                                            currentElement->getKey()) > 0) ? RIGHT : LEFT;
+                                currentElement->getKey()) > 0) ? RIGHT : LEFT;
         heightChanged = false;
         addElement(newElement, currentElement->getSubTreeElement(direction), heightChanged);
         if (heightChanged) {
@@ -94,13 +95,6 @@ void Table::addElement(Element *newElement, Element*& currentElement, bool& heig
         }
     }
 }
-
-//void Table::applyPrimaryKeyInElements(Element *element){
-//    if (element == NULL) return;
-//    element->setPrimaryKey(this->firstAttribute);
-//    if (element->getLeftElement() != NULL) applyPrimaryKeyInElements(element->getLeftElement());
-//    if (element->getRightElement() != NULL) applyPrimaryKeyInElements(element->getRightElement());
-//}
 
 void Table::readPreOrdem(Element*& node){
     if (node == NULL) return;
@@ -123,7 +117,7 @@ void Table::readPosOrdem(Element*& node){
     cout << node->getKey() << ", ";
 }
 
-void Table::drawTree(Element *element, int spaces){
+void Table::drawTree(Element *element, int spaces){ //desenha a subárvore no console, recursivamente
     int i;
     if( element != NULL ) {
         drawTree( element->getRightElement(), spaces + 3 );
@@ -166,7 +160,7 @@ bool Table::empty(){
     return (rootElement == NULL);
 }
 
-bool Table::validateAttributes(vector<string> *attributes){
+bool Table::validateAttributes(vector<string> *attributes){ //verifica se a lista de atributos passada também está existe na tabela
     Attribute *aux = this->firstAttribute;
     vector<string>::iterator attrib = attributes->begin();
     while (aux) {
@@ -185,7 +179,7 @@ bool Table::validateAttributes(vector<string> *attributes){
     return true;
 }
 
-bool Table::existPrimaryKey(){
+bool Table::existPrimaryKey(){ //percorre a lista de atributos e verifica que existe pelo menos 1 primary key definida na tabela
     Attribute *aux = this->firstAttribute;
     while (aux) {
         if (aux->isPrimarykey())
@@ -211,7 +205,7 @@ Element* Table::getRootElement(){
     return this->rootElement;
 }
 
-Element* Table::findElement(string key) {
+Element* Table::findElement(string key) { //busca um elemento na árvore, se não existir retorna NULL
     Element* current = this->rootElement;
     while (current != NULL) {
         if (key.compare(current->getKey()) > 0) {
@@ -268,7 +262,7 @@ void Table::printAttributes(){
         cout << "Não existem atributos na tabela " << this->getName() << endl;
 }
 
-void Table::applyPrimaryKey(vector<string> attribs){
+void Table::applyPrimaryKey(vector<string> attribs){//a partir da leitura do arquivo, esse método é chamado para criar a lista de atributos da tabela
     Attribute *aux = this->firstAttribute;
     vector<string>::iterator attrib = attribs.begin();
     while (aux) {
@@ -317,6 +311,15 @@ void Table::printElementsPosOrdem(){
 
 void Table::drawTree(){
     drawTree(this->rootElement, 0);
+}
+
+void Table::startTime(){
+    clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &this->timeStart);
+}
+
+void Table::endTime(double *var){
+    clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &this->timeEnd);
+    *var += (this->timeEnd.tv_sec - this->timeStart.tv_sec) + (this->timeEnd.tv_nsec - this->timeStart.tv_nsec) / 1e9;
 }
 
 

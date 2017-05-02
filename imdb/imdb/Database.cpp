@@ -120,7 +120,7 @@ Table* Database::getLastTable(){
     return this->lastTable;
 }
 
-Table* Database::getTable(string name){
+Table* Database::getTable(string name){ //busca por uma tabela no banco, retorna NULL se não existir
     Table* table = firstTable;
     if (!empty()){
         while (table){
@@ -149,7 +149,7 @@ void Database::printTables() {
     }
 }
 
-void Database::addTable(Table *newTable){
+void Database::addTable(Table *newTable){ //insere uma tabela no banco
     Table* table = getTable(newTable->getName());
     if (table == NULL){//não existe
         if (empty()) {
@@ -167,7 +167,7 @@ void Database::addTable(Table *newTable){
     }
 }
 
-void Database::removeTable(string name){
+void Database::removeTable(string name){ //remove uma tabela do banco
     Table* prevTable = firstTable;
     Table* currTable = firstTable;
     if (currTable->getName().compare(name) == 0){
@@ -190,9 +190,9 @@ void Database::removeTable(string name){
 }
 
 void Database::readFile(string path){
-    vector<vector<string>> createTables;
-    vector<vector<vector<string>>> copyTables;
-    vector<vector<string>> alterTables;
+    vector<vector<string>> createTables; //carrega as tabelas que deverão ser criadas
+    vector<vector<vector<string>>> copyTables; //carrega os registros a serem inseridos em cada tabela, a primeira linha do comando também é carregada para saber em qual tabela e quais campos serão inseridos
+    vector<vector<string>> alterTables; //carrega as informações de quais campos serão chaves primárias
     
     startTime();
     string line;
@@ -204,7 +204,7 @@ void Database::readFile(string path){
             if (isdigit(*line.begin()) || isalpha(*line.begin()) || line.substr(0,2) == "\\." || line.substr(0,2) == ");") {
                 vector<string> words;
                 split(line, words);
-                if ((*words.begin() == "CREATE") && (words[1] == "TABLE")) { //Criando tabelas
+                if ((*words.begin() == "CREATE") && (words[1] == "TABLE")) { //primeiro é carregado as informações sobre a criação das tabelas
                     cout << "       Lendo informações de criação de tabelas..." << endl;
                     vector<string> table;
                     table.push_back(words[2]);//nameTable
@@ -220,7 +220,7 @@ void Database::readFile(string path){
                         }
                     }
                     createTables.push_back(table);
-                } else if (*words.begin() == "COPY") {//populando tabelas
+                } else if (*words.begin() == "COPY") {//segundo é carregado as informações dos registros
                     cout << "       Lendo informações de registros..." << endl;
                     vector<string> table;
                     table.push_back(words[1]);
@@ -247,7 +247,7 @@ void Database::readFile(string path){
                         listTables.push_back(values);
                     }
                     copyTables.push_back(listTables);
-                } else if (*words.begin() == "ALTER") {//Aplicando PrimaryKey
+                } else if (*words.begin() == "ALTER") {//por fim carrega as informações que se tornarão chaves primárias
                     cout << "       Lendo informações adicionais sobre as tabelas..." << endl;
                     vector<string> table;
                     string nameTable = words[3];
@@ -281,6 +281,7 @@ void Database::readFile(string path){
     cout << endl;
     cout << "       Criando tabelas..." << endl;
     startTime();
+    //cria as tabelas no banco lendo as informações do vector<vector<string>> createTables
     for(vector<vector<string>>::iterator table = createTables.begin(); table != createTables.end(); table++){
         Table *t = nullptr;
         for(vector<string>::iterator value = table->begin(); value != table->end(); value++){
@@ -294,6 +295,7 @@ void Database::readFile(string path){
     endTime(&this->creationTime);
     cout << "       Aplicando chaves primárias..." << endl;
     startTime();
+    //define quais atributos irao compor as chaves primárias a partir da leitura das informações carregadas no vector<vector<string>> alterTables
     for(vector<vector<string>>::iterator table=alterTables.begin(); table != alterTables.end(); table++){
         vector<string> attribs;
         string nameTable = *table->begin();
@@ -305,6 +307,8 @@ void Database::readFile(string path){
     endTime(&this->creationTime);
     cout << "       Inserindo registros nas tabelas..." << endl;
     startTime();
+    //insere os registros em suas respectivas tabelas que a partir da leitura das informações carregadas no vector<vector<vector<string>>> copyTables
+    //foi necessário inverter com o laço anterior porque só é possivel inserir na árvore sabendo quais campos são chave primária
     for(vector<vector<vector<string>>>::iterator it=copyTables.begin(); it != copyTables.end(); it++){
         string nameTable;
         vector<string> attribs;

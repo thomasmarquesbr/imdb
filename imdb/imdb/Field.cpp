@@ -18,8 +18,6 @@ void Field::clear(){
     this->value.clear();
 }
 
-/* PUBLIC METHODS */
-
 Field::Field(string name, string value){
     this->name = name;
     this->value = value;

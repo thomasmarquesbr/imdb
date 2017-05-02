@@ -14,11 +14,11 @@
 
 class Menu {
 public:
-    static void showHeader();
-    static void showMainMenu(Database *database);
-    static void showMenuDatabase(Database *database);
-    static void showMenuTables(Database *database);
-    static void showMenuSearchTable(Table *table);
+    static void showHeader(); //Cabeçalho
+    static void showMainMenu(Database *database); //Menu Inicial
+    static void showMenuDatabase(Database *database); //Menu de informações sobre o banco de dados
+    static void showMenuTables(Database *database); //Menu de informações sobre as tabelas
+    static void showMenuSearchTable(Table *table); //Menu de informações sobre uma tabela acessada
 };
 
 #endif /* Menu_hpp */

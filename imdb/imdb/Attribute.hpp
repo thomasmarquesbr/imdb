@@ -16,7 +16,7 @@ using namespace std;
 
 class Attribute{
 private:
-    bool primaryKey;
+    bool primaryKey; //determina se o atributo compõe a chave primária
     string name;
     Attribute *next;
     

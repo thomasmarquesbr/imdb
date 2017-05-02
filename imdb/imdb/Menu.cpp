@@ -182,12 +182,20 @@ void Menu::showMenuTables(Database *database){
                 name = "";
                 cin >> name;
                 cin.clear(); cin.ignore(INT_MAX,'\n');
+                double time = 0.0;
                 if (name.at(0) != 'X') {
+                    database->startTime();
                     Table *table = database->getTable(name);
-                    if (table != NULL)
+                    database->endTime(&time);
+                    if (table != NULL){
+                        cout << endl << "       Tempo de busca: " << time << " segundos." << endl;
+                        cout << endl;
                         showMenuSearchTable(table);
-                    else
-                        cout << "       A tabela \"" + name +  "\" não existe." << endl;
+                    } else {
+                        cout << endl << "       A tabela \"" + name +  "\" não existe." << endl;
+                        cout << "       Tempo de busca: " << time << " segundos." << endl;
+                        cout << endl;
+                    }
                 }
                 break;
             }
@@ -253,11 +261,16 @@ void Menu::showMenuSearchTable(Table *table){
                         attribute = attribute->getNext();
                     }
                 }
-                if (element->getFirstField() != NULL)
+                double time = 0.0;
+                if (element->getFirstField() != NULL){
+                    table->startTime();
                     table->addElement(element);
-                else {
+                    table->endTime(&time);
+                    cout << "       Tempo de inserção: " << time << " segundos." << endl;
+                } else {
                     cout << endl << "       O registro deve conter pelo menos a chave primária. O registro não foi criado" << endl;
                 }
+                cout << endl;
                 break;
             }
             case 3:{
@@ -268,12 +281,16 @@ void Menu::showMenuSearchTable(Table *table){
                 key = "";
                 cin >> key;
                 cin.clear(); cin.ignore(BC_STRING_MAX,'\n');
+                double time = 0.0;
+                table->startTime();
                 Element *element = table->findElement(key);
+                table->endTime(&time);
                 cout << endl;
                 if (element != NULL) {
                     element->printFields();
                 } else
                     cout << "       Registro não existe na tabela." << endl;
+                cout << "       Tempo de busca: " << time << " segundos." << endl;
                 break;
             }
             case 4:{
