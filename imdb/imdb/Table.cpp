@@ -60,6 +60,29 @@ void Table::rebalanceInsert(Element*& element, Direction direction, bool& height
     }
 }
 
+void Table::rebalanceRemove(Element*& element, Direction direction, bool& hChanged){
+    Direction opposite = this->getOpposite(direction);
+    if (element->getBalance() == direction){
+        element->setBalance(EQUAL);
+    } else if (element->getBalance() == opposite) {
+        if (element->getSubTreeElement(opposite)->getBalance() == opposite){
+            element->getSubTreeElement(opposite)->setBalance(EQUAL);
+            element->setBalance(EQUAL);
+            singleRotation(element, opposite);
+        } else if (element->getSubTreeElement(opposite)->getBalance() == EQUAL){
+            element->getSubTreeElement(opposite)->setBalance(direction);
+            singleRotation(element, opposite);
+        } else {
+            updateBalance(element, opposite);
+            doubleRotation(element, opposite);
+        }
+        hChanged = false;
+    } else {
+        element->setBalance(opposite);
+        hChanged = false;
+    }
+}
+
 void Table::updateBalance(Element* element, Direction direction){ //atualiza o fator de balanceamento após uma operação na subárvore
     int opposite = this->getOpposite(direction);
     int bal = element->getSubTreeElement(direction)->getSubTreeElement(opposite)->getBalance();
@@ -93,6 +116,48 @@ void Table::addElement(Element *newElement, Element*& currentElement, bool& heig
         if (heightChanged) {
             rebalanceInsert(currentElement, direction, heightChanged);
         }
+    }
+}
+
+bool Table::removeElement(const string& key, Element*& element, bool& heightChanged){
+    bool success = false;
+    if (element == NULL){
+        heightChanged = false;
+        return false;
+    }
+    else if (key.compare(element->getKey()) == 0){
+        if (element->getSubTreeElement(LEFT) != NULL && element->getSubTreeElement(RIGHT) != NULL ){
+            Element* substitute = element->getSubTreeElement(LEFT);
+            while (substitute->getSubTreeElement(RIGHT) != NULL){
+                substitute = substitute->getSubTreeElement(RIGHT);
+            }
+            element->substituteElement(substitute);
+            success = removeElement(element->getKey(), element->getSubTreeElement(LEFT), heightChanged);
+            if (heightChanged){
+                rebalanceRemove(element, LEFT, heightChanged);
+            }
+        } else {
+            Element* temp = element;
+            Direction direction = (element->getSubTreeElement(LEFT) == NULL) ? RIGHT : LEFT;
+            element = element->getSubTreeElement(direction);
+            temp->getSubTreeElement(LEFT) = NULL;
+            temp->getSubTreeElement(RIGHT) = NULL;
+            delete temp;
+            heightChanged = true;
+        }
+        return true;
+    } else {
+        Direction direction = (key.compare(element->getKey()) > 0) ? RIGHT : LEFT;
+        if (element->getSubTreeElement(direction) != NULL){
+            success = this->removeElement(key, element->getSubTreeElement(direction), heightChanged);
+        } else {
+            heightChanged = false;
+            return false;
+        }
+        if (heightChanged) {
+            this->rebalanceRemove(element, direction, heightChanged);
+        }
+        return success;
     }
 }
 
@@ -280,6 +345,11 @@ void Table::applyPrimaryKey(vector<string> attribs){//a partir da leitura do arq
 void Table::addElement(Element *newElement){
     bool heightChanged = false;
     this->addElement(newElement, this->rootElement, heightChanged);
+}
+
+bool Table::removeElement(string key){
+    bool heightChanged = false;
+    return this->removeElement(key, this->rootElement, heightChanged);
 }
 
 void Table::printElementsPreOrdem(){

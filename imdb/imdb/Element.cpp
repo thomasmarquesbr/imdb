@@ -17,7 +17,7 @@ void Element::clear(){
     while (aux != NULL) {
         this->key.clear();
         firstField = firstField->getNext();
-        delete aux;
+//        delete aux;
         aux = firstField;
     }
     lastField = NULL;
@@ -83,6 +83,13 @@ Field* Element::getField(string name){ //percorre os campos até encontrar o Fie
     return field;
 }
 
+void Element::substituteElement(Element *newElement){
+    this->amountFields = newElement->getAmountFields();
+    this->key = newElement->getKey();
+    this->firstField = newElement->getFirstField();
+    this->lastField = newElement->getLastField();
+}
+
 Element*& Element::getSubTreeElement(int direction){
     return this->subTreeElement[direction];
 }
@@ -103,6 +110,10 @@ void Element::setPrimaryKey(Attribute *attrib){//concatena os campos que compõe
             this->key += this->getField(auxAttrib->getName())->getValue();
         auxAttrib = auxAttrib->getNext();
     }
+}
+
+void Element::unlinkSubTreeElement(int direction){
+    this->subTreeElement[direction] = NULL;
 }
 
 void Element::setSubTreeElement(Element *&element, int direction){

@@ -46,6 +46,8 @@ public:
     Field* getLastField();
     Field* getField(string name);
     
+    void substituteElement(Element *newElement);
+    
     /* retorna subarvore necessária de acordo com a direção da mesma que é passada como parâmetro */
     Element*& getSubTreeElement(int direction);
     Element*& getLeftElement();
@@ -54,6 +56,7 @@ public:
     /* analisa os atributos da tabela e atualiza/concatena a chave primária key */
     void setPrimaryKey(Attribute *attrib);
     
+    void unlinkSubTreeElement(int direction);
     void setSubTreeElement(Element*& element, int direction);
     void setBalance(unsigned short balance);
     

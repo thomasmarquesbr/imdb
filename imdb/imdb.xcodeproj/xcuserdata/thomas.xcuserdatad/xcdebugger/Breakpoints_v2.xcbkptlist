@@ -26,11 +26,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "imdb/Table.cpp"
-            timestampString = "515430596.780501"
+            timestampString = "516029901.187225"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "281"
-            endingLineNumber = "281"
+            startingLineNumber = "362"
+            endingLineNumber = "362"
             landmarkName = "Table::addElement(Element *newElement)"
             landmarkType = "7">
          </BreakpointContent>
@@ -42,11 +42,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "imdb/Table.cpp"
-            timestampString = "515430596.780501"
+            timestampString = "516029901.187225"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "257"
-            endingLineNumber = "257"
+            startingLineNumber = "338"
+            endingLineNumber = "338"
             landmarkName = "Table::printAttributes()"
             landmarkType = "7">
          </BreakpointContent>
@@ -64,6 +64,22 @@
             startingLineNumber = "344"
             endingLineNumber = "344"
             landmarkName = "Database::endTime(double *var)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "imdb/Table.cpp"
+            timestampString = "515990879.065171"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "122"
+            endingLineNumber = "122"
+            landmarkName = "Table::removeElement(const string&amp; key, Element*&amp; element, bool&amp; heightChanged)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

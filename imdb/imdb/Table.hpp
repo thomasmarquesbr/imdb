@@ -35,11 +35,16 @@ private:
     /* rebalanceia a subarvore após a inserção de um elemento verificando se houve alteração na subarvore de maior altura, determinando se é necessário fazer uma rotação simples ou dupla */
     void rebalanceInsert(Element*& element, Direction direction, bool& heightChanged);
     
+    void rebalanceRemove(Element*& element, Direction direction, bool& heightChanged);
+    
     /* atualiza os fatores de balanceamento após executar uma rotação */
     void updateBalance(Element* element, Direction direction);
     
     /* percorre a árvore e adiciona um elemento na árvore se possível de acordo com a chave primária definida */
     void addElement(Element *newElement, Element*& currentElement, bool& heightChanged);
+    
+    // Remove um item da árvore a partir de sua chave (palavra)
+    bool removeElement(const string& chave, Element*& element, bool& hChanged);
     
     /* métodos recursivos dos percursos PreOrdem, InOrdem e PosOrdem  */
     void readPreOrdem(Element*& node);
@@ -82,6 +87,8 @@ public:
     
     /* insere um elemento na árvore */
     void addElement(Element *newElement);
+    
+    bool removeElement(string key);
     
     void printElementsPreOrdem();
     void printElementsInOrdem();
