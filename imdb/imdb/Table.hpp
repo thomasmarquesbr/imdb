@@ -53,6 +53,7 @@ private:
     
     /* método recursivo da exibição da árvore */
     void drawTree(Element* element, int spaces);
+    void countElements(Field *field, Element*& element, int& count);
     void clear();
     
 public:
@@ -99,6 +100,8 @@ public:
     
     /* imprime a árvore no console de forma visual */
     void drawTree();
+    
+    int selectCount(string& name, string value);
     
     /* métodos usados para auxiliar a medição do tempo ao executar determinada operação */
     void startTime();

@@ -168,9 +168,11 @@ void Database::executeSql(string querySql){
                         it++;
                     }
                     valueField = removeCharsFromString(valueField, "\"(,);");
+                    cout << "       Result:" << endl << "       " << table->selectCount(nameField, valueField) << endl;
                 } else {// espera espaços antes e depois do '='
                     nameField = removeCharsFromString(*word,"\"(,);");;
                     valueField = removeCharsFromString(*(word+2), "\"(,);");
+                    cout << "       Result:" << endl << "       " << table->selectCount(nameField, valueField) << endl;
                 }
             } else {
                 cout << "       A tabela \"" << removeCharsFromString(*word, "\"(,);") << "\" não existe." << endl;

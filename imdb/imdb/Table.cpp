@@ -193,6 +193,15 @@ void Table::drawTree(Element *element, int spaces){ //desenha a subárvore no co
     }
 }
 
+void Table::countElements(Field *field, Element*& element, int& count){
+    if (element == NULL) return;
+    Field *fieldElem = element->getField(field->getName());
+    if ((fieldElem != NULL) && (fieldElem->getValue().compare(field->getValue()) == 0))
+        count++;
+    if (element->getLeftElement() != NULL) countElements(field, element->getLeftElement(), count);
+    if (element->getRightElement() != NULL) countElements(field, element->getRightElement(), count);
+}
+
 void Table::clear(){
     Attribute *aux = this->firstAttribute;
     while (aux != NULL) {
@@ -399,6 +408,13 @@ void Table::printElementsPosOrdem(){
 
 void Table::drawTree(){
     drawTree(this->rootElement, 0);
+}
+
+int Table::selectCount(string& name, string value){
+    int count = 0;
+    Field *field = new Field(name,value);
+    this->countElements(field, this->rootElement, count);
+    return count;
 }
 
 void Table::startTime(){
