@@ -17,6 +17,7 @@ using namespace std;
 class Attribute{
 private:
     bool primaryKey; //determina se o atributo compõe a chave primária
+    bool foreignKey;
     string name;
     Attribute *next;
     
@@ -32,6 +33,7 @@ public:
     
     void setNext(Attribute *attribute);
     void setPrimaryKey(bool value);
+    void setForeignKey(bool value);
 };
 
 #endif /* Attribute_hpp */

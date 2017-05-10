@@ -18,6 +18,7 @@ void Attribute::clear(){
 
 Attribute::Attribute(string name){
     this->primaryKey = false;
+    this->foreignKey = false;
     this->name = name;
     this->next = NULL;
 }
@@ -50,4 +51,8 @@ void Attribute::setNext(Attribute *attribute){
 
 void Attribute::setPrimaryKey(bool value){
     this->primaryKey = value;
+}
+
+void Attribute::setForeignKey(bool value){
+    this->foreignKey = value;
 }

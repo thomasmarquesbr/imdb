@@ -25,6 +25,7 @@ private:
     
     string trim(std::string & str); //remove espaços em branco dos campos
     string removeCharsFromString(const string str, char* charsToRemove); //remove cacacteres passados como parametros de uma string
+    string toUpper(string strToConvert);
     void split(const std::string& str, std::vector<std::string>& v); //quebra string em partes
     void print(vector<string> list); //imprime lista no console, auxilia na criação das estruturas
     void clear();
@@ -38,6 +39,7 @@ public:
     Table* getFirstTable();
     Table* getLastTable();
     Table* getTable(string name); //retorna se existir a tabela da lista encadeada, caso contrário retorna NULL
+    void executeSql(string querySql);
     void printTables(); //imprime no console o nome das tabelas já criadas no banco
     void addTable(Table *newTable); //adiciona uma nova tabela com nome distindo na lista encadeada
     void removeTable(string name); //remove uma tabela da lista encadeada se existir

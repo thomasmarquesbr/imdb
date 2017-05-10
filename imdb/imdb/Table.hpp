@@ -85,6 +85,9 @@ public:
     /* define os atributos que irão compor a chave primária, usado ao ler o comando de ALTER TABLE do arquivo */
     void applyPrimaryKey(vector<string> attribs);
     
+    /* define quais atributos são chaves estrangeiras na tabela */
+    void applyForeignKey(vector<string> attribs);
+    
     /* insere um elemento na árvore */
     void addElement(Element *newElement);
     

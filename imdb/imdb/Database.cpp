@@ -53,6 +53,11 @@ string Database::removeCharsFromString(const string str, char* charsToRemove) {
     return string(c);
 }
 
+string Database::toUpper(string strToConvert){
+    std::transform(strToConvert.begin(), strToConvert.end(), strToConvert.begin(), ::toupper);
+    return strToConvert;
+}
+
 void Database::split(const std::string& str, std::vector<std::string>& v) {
     std::stringstream ss(str);
     ss >> std::noskipws;
@@ -131,6 +136,50 @@ Table* Database::getTable(string name){ //busca por uma tabela no banco, retorna
         }
     }
     return table;
+}
+
+void Database::executeSql(string querySql){
+    vector<string> words;
+    split(querySql, words);
+    vector<string>::iterator word=words.begin();
+    if (toUpper(*word).compare("SELECT") == 0){
+        word++;
+        if(toUpper(*word).compare("COUNT(*)") == 0 && toUpper(*(word+1)).compare("FROM") == 0) {// caso simples contando todos os elementos
+            word += 2;
+            string afterTableName = *(word+1);
+            Table *table = this->getTable(removeCharsFromString(*word, "\"(,);"));
+            if ((table) && (afterTableName.empty() || *(word->end()-1) == ';')){//não existe mais tabelas ou termina com ';'
+                cout << "       Result:" << endl << "       " << table->getAmountElements() << endl;
+            } else if ((table) && (afterTableName.compare("WHERE") == 0)){
+                word += 2;
+                string nameField = "";
+                string valueField = "";
+                if (word->find("=") != string::npos) {//não existe espaços antes e depois do '='
+                    string str = *word;
+                    vector<char>::iterator it = str.begin();
+                    while(*it != '='){
+                        nameField += *it;
+                        it++;
+                    }
+                    nameField = removeCharsFromString(nameField,"\"(,);");
+                    it++;
+                    while(it != str.end()){
+                        valueField +=*it;
+                        it++;
+                    }
+                    valueField = removeCharsFromString(valueField, "\"(,);");
+                } else {// espera espaços antes e depois do '='
+                    nameField = removeCharsFromString(*word,"\"(,);");;
+                    valueField = removeCharsFromString(*(word+2), "\"(,);");
+                }
+            } else {
+                cout << "       A tabela \"" << removeCharsFromString(*word, "\"(,);") << "\" não existe." << endl;
+            }
+        }
+    } else {
+        cout << "comando \"" << *word << "\" invalido" << endl;
+    }
+    cout << endl;
 }
 
 void Database::printTables() {

@@ -342,6 +342,21 @@ void Table::applyPrimaryKey(vector<string> attribs){//a partir da leitura do arq
         cout << "       O atributo \"" << *attrib << "\" não existe na tabela \"" << this->name << "\"." << endl;
 }
 
+void Table::applyForeignKey(vector<string> attribs){
+    Attribute *aux = this->firstAttribute;
+    vector<string>::iterator attrib = attribs.begin();
+    while (aux) {
+        if (aux->getName() == *attrib) {
+            aux->setForeignKey(true);
+            aux = this->firstAttribute;
+            attrib++;
+        } else
+            aux = aux->getNext();
+    }
+    if (attrib != attribs.end())
+        cout << "       O atributo \"" << *attrib << "\" não existe na tabela \"" << this->name << "\"." << endl;
+}
+
 void Table::addElement(Element *newElement){
     bool heightChanged = false;
     this->addElement(newElement, this->rootElement, heightChanged);
@@ -349,7 +364,10 @@ void Table::addElement(Element *newElement){
 
 bool Table::removeElement(string key){
     bool heightChanged = false;
-    return this->removeElement(key, this->rootElement, heightChanged);
+    bool success = this->removeElement(key, this->rootElement, heightChanged);
+    if (success)
+        this->amountElements--;
+    return success;
 }
 
 void Table::printElementsPreOrdem(){
