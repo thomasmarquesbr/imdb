@@ -10,6 +10,11 @@
 #define Table_hpp
 
 #include <stdio.h>
+
+class Table;
+
+#include "Util.hpp"
+#include "Database.hpp"
 #include "Element.hpp"
 #include "Attribute.hpp"
 
@@ -71,6 +76,7 @@ public:
     int getAmountElements();
     string getName();
     Attribute* getFirstAttribute();
+    Attribute* getAttribute(string name);
     Element* getRootElement();
     
     /* localiza elemento na árvore, caso contrário retorna NULL */
@@ -87,7 +93,7 @@ public:
     void applyPrimaryKey(vector<string> attribs);
     
     /* define quais atributos são chaves estrangeiras na tabela */
-    void applyForeignKey(vector<string> attribs);
+    void applyForeignKey(Database* database, vector<string> attribs, vector<string> tables);
     
     /* insere um elemento na árvore */
     void addElement(Element *newElement);
@@ -102,6 +108,7 @@ public:
     void drawTree();
     
     int selectCount(string& name, string value);
+    void selectInnerJoin(Table *table2, string namePK, string nameFK);
     
     /* métodos usados para auxiliar a medição do tempo ao executar determinada operação */
     void startTime();

@@ -12,6 +12,10 @@
 #include <stdio.h>
 #include <string>
 
+class Attribute;
+
+#include "Table.hpp"
+
 using namespace std;
 
 class Attribute{
@@ -20,6 +24,7 @@ private:
     bool foreignKey;
     string name;
     Attribute *next;
+    Table *table;
     
     void clear();
 public:
@@ -28,12 +33,16 @@ public:
     ~Attribute();
     
     bool isPrimarykey();
+    bool isForeignKey();
     string getName();
     Attribute* getNext();
     
     void setNext(Attribute *attribute);
     void setPrimaryKey(bool value);
     void setForeignKey(bool value);
+    void setTableReference(Table* table);
+    
+    Table* getTableReference();
 };
 
 #endif /* Attribute_hpp */

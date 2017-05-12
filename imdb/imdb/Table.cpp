@@ -13,6 +13,7 @@
 #include <string>
 #include "time.h"
 #include "Table.hpp"
+#include "Database.hpp"
 
 /* PRIVATE METHODS */
 
@@ -275,6 +276,17 @@ Attribute* Table::getFirstAttribute() {
     return this->firstAttribute;
 }
 
+Attribute* Table::getAttribute(string name){
+    Attribute* attribute = firstAttribute;
+    while (attribute){
+        if(attribute->getName().compare(name) == 0){
+            return attribute;
+        } else
+            attribute = attribute->getNext();
+        }
+    return attribute;
+}
+
 Element* Table::getRootElement(){
     return this->rootElement;
 }
@@ -351,19 +363,30 @@ void Table::applyPrimaryKey(vector<string> attribs){//a partir da leitura do arq
         cout << "       O atributo \"" << *attrib << "\" não existe na tabela \"" << this->name << "\"." << endl;
 }
 
-void Table::applyForeignKey(vector<string> attribs){
+void Table::applyForeignKey(Database* database, vector<string> attrib, vector<string> table){
     Attribute *aux = this->firstAttribute;
-    vector<string>::iterator attrib = attribs.begin();
+    vector<string>::iterator itAttrib = attrib.begin();
+    vector<string>::iterator itTable = table.begin();
     while (aux) {
-        if (aux->getName() == *attrib) {
-            aux->setForeignKey(true);
+        if (aux->getName() == *itAttrib) {
+            Table *table = database->getTable(*itTable);
+            if (table != NULL){//verifica se a tabela existe no banco
+                Attribute *attribute = table->getAttribute(*itAttrib);
+                if ((attribute) && (attribute->isPrimarykey())) {//verifica se o attributo existe na tabela referenciada e se é chave primária
+                    aux->setTableReference(table);
+                    aux->setForeignKey(true);
+                } else
+                    cout << "       O atributo \"" << *itAttrib << "\" não existe na tabela \"" << table->getName() << "\"." << endl;
+            } else
+                cout << "       A tabela \"" << *itTable << "\" não existe no banco." << endl;
             aux = this->firstAttribute;
-            attrib++;
+            itAttrib++;
+            itTable++;
         } else
             aux = aux->getNext();
     }
-    if (attrib != attribs.end())
-        cout << "       O atributo \"" << *attrib << "\" não existe na tabela \"" << this->name << "\"." << endl;
+    if (itAttrib != attrib.end())
+        cout << "       O atributo \"" << *itAttrib << "\" não existe na tabela \"" << this->name << "\"." << endl;
 }
 
 void Table::addElement(Element *newElement){
@@ -415,6 +438,16 @@ int Table::selectCount(string& name, string value){
     Field *field = new Field(name,value);
     this->countElements(field, this->rootElement, count);
     return count;
+}
+
+void selectInnerJoinPrint(Table *table1, Table* table2, string pkName, string fkName2){
+    
+}
+
+void Table::selectInnerJoin(Table *table2, string namePK, string nameFK){
+    
+    
+    
 }
 
 void Table::startTime(){

@@ -112,10 +112,6 @@ void Element::setPrimaryKey(Attribute *attrib){//concatena os campos que compõe
     }
 }
 
-void Element::unlinkSubTreeElement(int direction){
-    this->subTreeElement[direction] = NULL;
-}
-
 void Element::setSubTreeElement(Element *&element, int direction){
     this->subTreeElement[direction] = element;
 }

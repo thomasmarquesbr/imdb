@@ -7,7 +7,6 @@
 //
 
 #include <iostream>
-#include "Database.hpp"
 #include "Menu.hpp"
 
 using namespace std;
@@ -104,7 +103,7 @@ void Menu::showMenuDatabase(Database *database){
                 getline(cin, querySql);
                 cin.ignore();
                 if (querySql.at(0) != 'X' && !querySql.empty()) {
-                    database->executeSql(querySql);
+                    database->executeParserSql(querySql);
                 }
                 cout << endl;
                 break;

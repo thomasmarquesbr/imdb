@@ -21,6 +21,7 @@ Attribute::Attribute(string name){
     this->foreignKey = false;
     this->name = name;
     this->next = NULL;
+    this->table = NULL;
 }
 
 Attribute::Attribute(string name, bool isPrimaryKey){
@@ -35,6 +36,10 @@ Attribute::~Attribute(){
 
 bool Attribute::isPrimarykey(){
     return this->primaryKey;
+}
+
+bool Attribute::isForeignKey(){
+    return this->foreignKey;
 }
 
 string Attribute::getName(){
@@ -55,4 +60,12 @@ void Attribute::setPrimaryKey(bool value){
 
 void Attribute::setForeignKey(bool value){
     this->foreignKey = value;
+}
+
+void Attribute::setTableReference(Table *table){
+    this->table = table;
+}
+
+Table* Attribute::getTableReference(){
+    return this->table;
 }

@@ -10,14 +10,12 @@
 #define Element_hpp
 
 #include <stdio.h>
+
+class Element;
+
 #include "Field.hpp"
 #include "Attribute.hpp"
-
-enum Direction {
-    LEFT  = 0,
-    RIGHT = 1,
-    EQUAL = 2,
-};
+#include "Util.hpp"
 
 class Element{
 private:
@@ -56,7 +54,6 @@ public:
     /* analisa os atributos da tabela e atualiza/concatena a chave primária key */
     void setPrimaryKey(Attribute *attrib);
     
-    void unlinkSubTreeElement(int direction);
     void setSubTreeElement(Element*& element, int direction);
     void setBalance(unsigned short balance);
     

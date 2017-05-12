@@ -10,9 +10,12 @@
 #define Menu_hpp
 
 #include <stdio.h>
+
+class Menu;
+
 #include "Database.hpp"
 
-class Menu {
+class Menu{
 public:
     static void showHeader(); //Cabeçalho
     static void showMainMenu(Database *database); //Menu Inicial

@@ -20,66 +20,11 @@
 
 #include "Database.hpp"
 #include "Table.hpp"
+#include "Util.hpp"
 
 using namespace std;
 
 /* PRIVATE METHODS */
-
-string Database::trim(std::string & str){
-    size_t first = str.find_first_not_of(' ');
-    if (first == string::npos)
-        return "";
-    size_t last = str.find_last_not_of(' ');
-    return str.substr(first, (last-first+1));
-}
-
-string Database::removeCharsFromString(const string str, char* charsToRemove) {
-    char c[str.length()+1];
-    const char *p = str.c_str();
-    unsigned int z=0, size = str.length();
-    unsigned int x;
-    bool rem=false;
-    for(x=0; x<size; x++) {
-        rem = false;
-        for (unsigned int i = 0; charsToRemove[i] != 0; i++) {
-            if (charsToRemove[i] == p[x]) {
-                rem = true;
-                break;
-            }
-        }
-        if (rem == false) c[z++] = p[x];
-    }
-    c[z] = '\0';
-    return string(c);
-}
-
-string Database::toUpper(string strToConvert){
-    std::transform(strToConvert.begin(), strToConvert.end(), strToConvert.begin(), ::toupper);
-    return strToConvert;
-}
-
-void Database::split(const std::string& str, std::vector<std::string>& v) {
-    std::stringstream ss(str);
-    ss >> std::noskipws;
-    std::string field;
-    char ws_delim;
-    while(1) {
-        if( ss >> field )
-            v.push_back(field);
-        else if (ss.eof())
-            break;
-        else
-            v.push_back(std::string());
-        ss.clear();
-        ss >> ws_delim;
-    }
-}
-
-void Database::print(vector<string> list) {
-    for(int i=0; i < list.size(); i++){
-        cout<<list[i]<<endl;
-    }
-}
 
 void Database::clear(){
     Table *aux = this->firstTable;
@@ -138,48 +83,75 @@ Table* Database::getTable(string name){ //busca por uma tabela no banco, retorna
     return table;
 }
 
-void Database::executeSql(string querySql){
+void Database::executeParserSql(string querySql){//Parser SQL para SELECT COUNT(*) e JOIN
     vector<string> words;
     split(querySql, words);
     vector<string>::iterator word=words.begin();
     if (toUpper(*word).compare("SELECT") == 0){
         word++;
-        if(toUpper(*word).compare("COUNT(*)") == 0 && toUpper(*(word+1)).compare("FROM") == 0) {// caso simples contando todos os elementos
+        if(toUpper(*word).compare("COUNT(*)") == 0 && toUpper(*(word+1)).compare("FROM") == 0) {// caso simples contando todos os elementos COUNT(*) ou com WHERE
             word += 2;
-            string afterTableName = *(word+1);
             Table *table = this->getTable(removeCharsFromString(*word, "\"(,);"));
-            if ((table) && (afterTableName.empty() || *(word->end()-1) == ';')){//não existe mais tabelas ou termina com ';'
-                cout << "       Result:" << endl << "       " << table->getAmountElements() << endl;
-            } else if ((table) && (afterTableName.compare("WHERE") == 0)){
-                word += 2;
-                string nameField = "";
-                string valueField = "";
-                if (word->find("=") != string::npos) {//não existe espaços antes e depois do '='
-                    string str = *word;
-                    vector<char>::iterator it = str.begin();
-                    while(*it != '='){
-                        nameField += *it;
-                        it++;
-                    }
-                    nameField = removeCharsFromString(nameField,"\"(,);");
-                    it++;
-                    while(it != str.end()){
-                        valueField +=*it;
-                        it++;
-                    }
-                    valueField = removeCharsFromString(valueField, "\"(,);");
+            if (table){
+                string nameField, valueField;
+                bool selectAll = false;
+                parserSelectWhere(word, selectAll, nameField, valueField);
+                if (selectAll){
+                    cout << "       Result:" << endl << "       " << table->getAmountElements() << endl;
+                } else if (!nameField.empty() && !valueField.empty()){
                     cout << "       Result:" << endl << "       " << table->selectCount(nameField, valueField) << endl;
-                } else {// espera espaços antes e depois do '='
-                    nameField = removeCharsFromString(*word,"\"(,);");;
-                    valueField = removeCharsFromString(*(word+2), "\"(,);");
-                    cout << "       Result:" << endl << "       " << table->selectCount(nameField, valueField) << endl;
-                }
-            } else {
+                } else
+                    cout << "       Não foi possível reconhecer a sintaxe do comando SQL; " << endl;
+            } else
                 cout << "       A tabela \"" << removeCharsFromString(*word, "\"(,);") << "\" não existe." << endl;
-            }
+        } else if (((*word).compare("*") == 0) && (toUpper(*(word+1)).compare("FROM") == 0)) { //caso INNER JOIN
+            word += 2;
+            string tableName1 = *word;
+            word++;
+            string tableName2, nameT1, nameA1, nameT2, nameA2; // nome da tabela 2, nome da tabela1.nomeAtributo1, nome da tabela2.nomeAtributo2
+            if ((toUpper(*word).compare("INNER") == 0) && (toUpper(*(word+1)).compare("JOIN") == 0)){
+                parserSelectJoin(word, tableName2, nameT1, nameA1, nameT2, nameA2);
+                if (!tableName2.empty() && !nameT1.empty() && !nameA1.empty() && !nameT2.empty() && !nameA2.empty()){
+//                    cout << tableName1 << endl;
+//                    cout << tableName2 << endl;
+//                    cout << nameT1 << endl;
+//                    cout << nameA1 << endl;
+//                    cout << nameT2 << endl;
+//                    cout << nameA2 << endl;
+                    
+                } else
+                    cout << "       Não foi possível reconhecer a sintaxe do comando SQL; " << endl;
+            } else if ((toUpper(*word).compare("LEFT") == 0)
+                       && (toUpper(*(word+1)).compare("OUTER") == 0)
+                       && (toUpper(*(word+2)).compare("JOIN") == 0)){ //LEFT OUTER JOIN food_des ON food_des.fdgrp_cd = fd_group.fdgrp_cd;
+                parserSelectJoin(word+1, tableName2, nameT1, nameA1, nameT2, nameA2);
+                if (!tableName2.empty() && !nameT1.empty() && !nameA1.empty() && !nameT2.empty() && !nameA2.empty()){
+//                    cout << tableName1 << endl;
+//                    cout << tableName2 << endl;
+//                    cout << nameT1 << endl;
+//                    cout << nameA1 << endl;
+//                    cout << nameT2 << endl;
+//                    cout << nameA2 << endl;
+                } else
+                    cout << "       Não foi possível reconhecer a sintaxe do comando SQL; " << endl;
+            } else if ((toUpper(*word).compare("RIGHT") == 0)
+                      && (toUpper(*(word+1)).compare("OUTER") == 0)
+                      && (toUpper(*(word+2)).compare("JOIN") == 0)){ //LEFT OUTER JOIN food_des ON food_des.fdgrp_cd = fd_group.fdgrp_cd;
+                parserSelectJoin(word+1, tableName2, nameT1, nameA1, nameT2, nameA2);
+                if (!tableName2.empty() && !nameT1.empty() && !nameA1.empty() && !nameT2.empty() && !nameA2.empty()){
+//                    cout << tableName1 << endl;
+//                    cout << tableName2 << endl;
+//                    cout << nameT1 << endl;
+//                    cout << nameA1 << endl;
+//                    cout << nameT2 << endl;
+//                    cout << nameA2 << endl;
+                } else
+                    cout << "       Não foi possível reconhecer a sintaxe do comando SQL; " << endl;
+            } else
+                cout << "       Não foi possível reconhecer a sintaxe do comando SQL; " << endl;
         }
     } else {
-        cout << "comando \"" << *word << "\" invalido" << endl;
+        cout << "       Comando \"" << *word << "\" invalido" << endl;
     }
     cout << endl;
 }

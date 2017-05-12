@@ -12,6 +12,8 @@
 #include <stdio.h>
 #include <string>
 
+class Field;
+
 using namespace std;
 
 class Field{
