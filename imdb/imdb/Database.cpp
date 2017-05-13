@@ -112,6 +112,10 @@ void Database::executeParserSql(string querySql){//Parser SQL para SELECT COUNT(
             if ((toUpper(*word).compare("INNER") == 0) && (toUpper(*(word+1)).compare("JOIN") == 0)){
                 parserSelectJoin(word, tableName2, nameT1, nameA1, nameT2, nameA2);
                 if (!tableName2.empty() && !nameT1.empty() && !nameA1.empty() && !nameT2.empty() && !nameA2.empty()){
+                    Table *table1 = this->getTable(tableName1);
+                    Table *table2 = this->getTable(tableName2);
+                    if (table1 != NULL && table2 != NULL)
+                        table1->selectInnerJoin(table2, nameA1, nameA2);
 //                    cout << tableName1 << endl;
 //                    cout << tableName2 << endl;
 //                    cout << nameT1 << endl;
@@ -216,6 +220,7 @@ void Database::readFile(string path){
     vector<vector<string>> createTables; //carrega as tabelas que deverão ser criadas
     vector<vector<vector<string>>> copyTables; //carrega os registros a serem inseridos em cada tabela, a primeira linha do comando também é carregada para saber em qual tabela e quais campos serão inseridos
     vector<vector<string>> alterTables; //carrega as informações de quais campos serão chaves primárias
+    vector<vector<string>> alterTablesFK;
     
     startTime();
     string line;
@@ -286,6 +291,37 @@ void Database::readFile(string path){
                             }
                             mustRead = true;
                             table.push_back(removeCharsFromString(*word, "\"(,);"));//attrib primary Key
+                        } else if (*word == "FOREIGN" && *(word+1) == "KEY") { //ler chaves estrangeiras
+                            vector<string> tableFK;
+                            word += 2;
+                            tableFK.push_back(nameTable);
+                            while (*word != "REFERENCES"){
+                                tableFK.push_back(removeCharsFromString(*word, "\"(,);"));
+                                word++;
+                            }
+                            word++;
+                            tableFK.push_back("REFERENCES");
+                            string table2 = "";
+                            vector<char>::iterator it = word->begin();
+                            while(*it != '('){
+                                table2 += *it;
+                                it++;
+                            }
+                            tableFK.push_back(table2);
+                            string attribute = "";
+                            while(*it != ')'){
+                                attribute += *it;
+                                it++;
+                                if (*it == ','){
+                                    tableFK.push_back(removeCharsFromString(trim(attribute), "\"(,);"));
+                                    word++;
+                                    it = word->begin();
+                                    attribute = "";
+                                }
+                            }
+                            tableFK.push_back(removeCharsFromString(trim(attribute), "\"(,);"));
+                            printVector(tableFK);
+                            alterTablesFK.push_back(tableFK);
                         }
                     }
                     if (mustRead)
@@ -328,6 +364,29 @@ void Database::readFile(string path){
         this->getTable(nameTable)->applyPrimaryKey(attribs);
     }
     endTime(&this->creationTime);
+    
+    cout << "       Aplicando chaves estrangeiras..." << endl;
+    for (vector<vector<string>>::iterator it=alterTablesFK.begin(); it != alterTablesFK.end(); it++) {
+        vector<string> listAttribs;
+        vector<string> listTables;
+        vector<string>::iterator i = it->begin();
+        Table *table = this->getTable(*i);
+        while (*i != "REFERENCES")
+            i++;
+        i++;
+        string nameTableReference = *i;
+        i++;
+        while (i != it->end()){
+            listAttribs.push_back(*i);
+            listTables.push_back(nameTableReference);
+            i++;
+        }
+        table->applyForeignKey(this, listAttribs, listTables);
+    }
+    
+    
+    
+    
     cout << "       Inserindo registros nas tabelas..." << endl;
     startTime();
     //insere os registros em suas respectivas tabelas que a partir da leitura das informações carregadas no vector<vector<vector<string>>> copyTables

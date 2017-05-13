@@ -172,3 +172,16 @@ void Element::printFields(){
         cout << endl;
     }
 }
+
+void Element::printFieldsInLine(){
+    Field *field = firstField;
+    cout << "       ";
+    if (empty())
+        cout << "Os campos do elemento não existem! \n";
+    else {
+        while (field){
+            cout << field->getValue() << "      ";
+            field = field->getNext();
+        }
+    }
+}

@@ -35,6 +35,8 @@ string toUpper(string strToConvert);
 
 void split(const std::string& str, std::vector<std::string>& v);
 
+void printVector(vector<string> list);
+
 void parserSelectWhere(vector<string>::iterator word, bool& selectAll, string& nameField, string& valueField);
 
 void parserSelectJoin(vector<string>::iterator word, string& tableName2, string& nameT1, string& nameA1, string& nameT2, string& nameA2);

@@ -7,6 +7,7 @@
 //
 
 
+#include <iostream>
 #include "Util.hpp"
 
 string trim(std::string & str){
@@ -58,6 +59,13 @@ void split(const std::string& str, std::vector<std::string>& v) {
         ss >> ws_delim;
     }
 }
+
+void printVector(vector<string> list){
+    for(vector<string>::iterator it = list.begin(); it != list.end(); it++)
+        cout << *it << "    ";
+    cout << endl;
+}
+
 
 void parserSelectWhere(vector<string>::iterator word, bool& selectAll, string& nameField, string& valueField){
     string afterTableName = *(word+1);

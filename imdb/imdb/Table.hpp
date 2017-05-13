@@ -88,6 +88,7 @@ public:
     void addAttribute(string name, bool isPrimaryKey);
     void setNextTable(Table *newTable);
     void printAttributes();
+    void printAttributesInLine();
     
     /* define os atributos que irão compor a chave primária, usado ao ler o comando de ALTER TABLE do arquivo */
     void applyPrimaryKey(vector<string> attribs);

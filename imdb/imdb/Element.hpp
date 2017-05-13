@@ -61,6 +61,7 @@ public:
     void addField(string name, string value);
     void removeField(string name);
     void printFields();
+    void printFieldsInLine();
 };
 
 #endif /* Element_hpp */
