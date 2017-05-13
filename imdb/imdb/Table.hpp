@@ -109,7 +109,8 @@ public:
     void drawTree();
     
     int selectCount(string& name, string value);
-    void selectInnerJoin(Table *table2, string namePK, string nameFK);
+    void selectInnerJoin(Table *table2, string nameFK, string namePK);
+    void selectLeftOuterJoin(Table *table2, string namePK, string nameFK);
     
     /* métodos usados para auxiliar a medição do tempo ao executar determinada operação */
     void startTime();

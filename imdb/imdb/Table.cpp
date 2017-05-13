@@ -452,30 +452,41 @@ int Table::selectCount(string& name, string value){
     return count;
 }
 
-void selectInnerJoinPrint(Table *table1, Element* elementTable2, string namePK, string nameFK){
-    if (elementTable2 == NULL) return;
-    Field *field = elementTable2->getField(nameFK);
-    Element *elementTable1 = table1->findElement(field->getValue());
-    if (field != NULL && elementTable1 != NULL && field->getValue().compare(elementTable1->getKey()) == 0){
+// -- INNER JOIN -- //
+
+void selectInnerJoinPrint(Element* elementTable1, Table *table2, string namePK, string nameFK){
+    if (elementTable1 == NULL) return;
+    Field *field = elementTable1->getField(nameFK);
+    Element *elementTable2 = table2->findElement(field->getValue());
+    if (field != NULL && elementTable2 != NULL && field->getValue().compare(elementTable2->getKey()) == 0){
         elementTable1->printFieldsInLine();
         elementTable2->printFieldsInLine();
         cout << endl;
     }
-//    SELECT * FROM table INNER JOIN table2 ON table.campo1 = table2.campo1;
+//    SELECT * FROM table2 INNER JOIN table ON table2.campo1 = table.campo1;
     //SELECT * FROM datsrcln INNER JOIN data_src ON datsrcln.datasrc_id = data_src.datasrc_id;
-    if (elementTable2->getLeftElement() != NULL) selectInnerJoinPrint(table1, elementTable2->getLeftElement(), namePK, nameFK);
-    if (elementTable2->getRightElement() != NULL) selectInnerJoinPrint(table1, elementTable2->getRightElement(), namePK, nameFK);
+    if (elementTable1->getLeftElement() != NULL) selectInnerJoinPrint(elementTable1->getLeftElement(), table2, namePK, nameFK);
+    if (elementTable1->getRightElement() != NULL) selectInnerJoinPrint(elementTable1->getRightElement(), table2, namePK, nameFK);
 }
 
-void Table::selectInnerJoin(Table *table2, string namePK, string nameFK){
-    if (this->getAttribute(namePK) != NULL && this->getAttribute(namePK)->isPrimarykey()
-        && table2->getAttribute(nameFK) != NULL && table2->getAttribute(nameFK)->isForeignKey()) {
+void Table::selectInnerJoin(Table *table2, string nameFK, string namePK){
+    if (this->getAttribute(nameFK) != NULL && this->getAttribute(nameFK)->isForeignKey()
+        && table2->getAttribute(namePK) != NULL && table2->getAttribute(namePK)->isPrimarykey()) {
         this->printAttributesInLine();
         table2->printAttributesInLine();
         cout << endl;
-        selectInnerJoinPrint(this, table2->getRootElement(), namePK, nameFK);
+        selectInnerJoinPrint(this->getRootElement(), table2, nameFK, namePK);
     } else
-        cout << "       Os campos " << namePK << " e " << nameFK << " não são chaves primárias e chaves estrangeiras respectivamente; " << endl;
+        cout << "       Os campos " << nameFK << " e " << namePK << " não são chaves estrangeiras e chaves primárias respectivamente; " << endl;
+}
+
+// -- LEFT OUTER JOIN -- //
+
+void selectLeftOuterJoinPrint(Element* elementTable1, Table *table2, string namePK, string nameFK){
+    
+}
+
+void Table::selectLeftOuterJoin(Table *table2, string namePK, string nameFK){
 }
 
 void Table::startTime(){

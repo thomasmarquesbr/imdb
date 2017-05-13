@@ -37,7 +37,7 @@ int main(int argc, const char * argv[]) {
     for (int i=0; i<11; i++){
         Element *element = new Element();
         element->addField("campo1", "valor"+to_string(i));
-        if (i % 2 == 0)
+//        if (i % 2 == 0)
             element->addField("campo2", "valor2");
         element->addField("campo3", "valor3");
         element->addField("campo4", "valor4");
@@ -60,8 +60,8 @@ int main(int argc, const char * argv[]) {
     listAttribs.push_back("campo1");
     vector<string> listTables;
     listTables.push_back("table");
-    
     table2->applyForeignKey(&database, listAttribs, listTables);
+    
     for (int i=0; i<11; i++){
         Element *element = new Element();
         element->addField("key", to_string(i));

@@ -115,14 +115,7 @@ void Database::executeParserSql(string querySql){//Parser SQL para SELECT COUNT(
                     Table *table1 = this->getTable(tableName1);
                     Table *table2 = this->getTable(tableName2);
                     if (table1 != NULL && table2 != NULL)
-                        table1->selectInnerJoin(table2, nameA1, nameA2);
-//                    cout << tableName1 << endl;
-//                    cout << tableName2 << endl;
-//                    cout << nameT1 << endl;
-//                    cout << nameA1 << endl;
-//                    cout << nameT2 << endl;
-//                    cout << nameA2 << endl;
-                    
+                        table1->selectInnerJoin(table2, nameA1, nameA2);    //INNER JOIN
                 } else
                     cout << "       Não foi possível reconhecer a sintaxe do comando SQL; " << endl;
             } else if ((toUpper(*word).compare("LEFT") == 0)
@@ -130,6 +123,10 @@ void Database::executeParserSql(string querySql){//Parser SQL para SELECT COUNT(
                        && (toUpper(*(word+2)).compare("JOIN") == 0)){ //LEFT OUTER JOIN food_des ON food_des.fdgrp_cd = fd_group.fdgrp_cd;
                 parserSelectJoin(word+1, tableName2, nameT1, nameA1, nameT2, nameA2);
                 if (!tableName2.empty() && !nameT1.empty() && !nameA1.empty() && !nameT2.empty() && !nameA2.empty()){
+                    Table *table1 = this->getTable(tableName1);
+                    Table *table2 = this->getTable(tableName2);
+                    if (table1 != NULL && table2 != NULL)
+                        table1->selectLeftOuterJoin(table2, nameA1, nameA2);
 //                    cout << tableName1 << endl;
 //                    cout << tableName2 << endl;
 //                    cout << nameT1 << endl;
@@ -366,6 +363,7 @@ void Database::readFile(string path){
     endTime(&this->creationTime);
     
     cout << "       Aplicando chaves estrangeiras..." << endl;
+    startTime();
     for (vector<vector<string>>::iterator it=alterTablesFK.begin(); it != alterTablesFK.end(); it++) {
         vector<string> listAttribs;
         vector<string> listTables;
@@ -383,10 +381,7 @@ void Database::readFile(string path){
         }
         table->applyForeignKey(this, listAttribs, listTables);
     }
-    
-    
-    
-    
+    endTime(&this->creationTime);
     cout << "       Inserindo registros nas tabelas..." << endl;
     startTime();
     //insere os registros em suas respectivas tabelas que a partir da leitura das informações carregadas no vector<vector<vector<string>>> copyTables
