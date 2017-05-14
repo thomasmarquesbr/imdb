@@ -120,19 +120,13 @@ void Database::executeParserSql(string querySql){//Parser SQL para SELECT COUNT(
                     cout << "       Não foi possível reconhecer a sintaxe do comando SQL; " << endl;
             } else if ((toUpper(*word).compare("LEFT") == 0)
                        && (toUpper(*(word+1)).compare("OUTER") == 0)
-                       && (toUpper(*(word+2)).compare("JOIN") == 0)){ //LEFT OUTER JOIN food_des ON food_des.fdgrp_cd = fd_group.fdgrp_cd;
+                       && (toUpper(*(word+2)).compare("JOIN") == 0)){
                 parserSelectJoin(word+1, tableName2, nameT1, nameA1, nameT2, nameA2);
                 if (!tableName2.empty() && !nameT1.empty() && !nameA1.empty() && !nameT2.empty() && !nameA2.empty()){
                     Table *table1 = this->getTable(tableName1);
                     Table *table2 = this->getTable(tableName2);
                     if (table1 != NULL && table2 != NULL)
-                        table1->selectLeftOuterJoin(table2, nameA1, nameA2);
-//                    cout << tableName1 << endl;
-//                    cout << tableName2 << endl;
-//                    cout << nameT1 << endl;
-//                    cout << nameA1 << endl;
-//                    cout << nameT2 << endl;
-//                    cout << nameA2 << endl;
+                        table1->selectLeftOuterJoin(table2, nameA1, nameA2);    //LEFT OUTER JOIN
                 } else
                     cout << "       Não foi possível reconhecer a sintaxe do comando SQL; " << endl;
             } else if ((toUpper(*word).compare("RIGHT") == 0)
@@ -140,12 +134,27 @@ void Database::executeParserSql(string querySql){//Parser SQL para SELECT COUNT(
                       && (toUpper(*(word+2)).compare("JOIN") == 0)){ //LEFT OUTER JOIN food_des ON food_des.fdgrp_cd = fd_group.fdgrp_cd;
                 parserSelectJoin(word+1, tableName2, nameT1, nameA1, nameT2, nameA2);
                 if (!tableName2.empty() && !nameT1.empty() && !nameA1.empty() && !nameT2.empty() && !nameA2.empty()){
-//                    cout << tableName1 << endl;
-//                    cout << tableName2 << endl;
-//                    cout << nameT1 << endl;
-//                    cout << nameA1 << endl;
-//                    cout << nameT2 << endl;
-//                    cout << nameA2 << endl;
+                    Table *table1 = this->getTable(tableName1);
+                    Table *table2 = this->getTable(tableName2);
+                    if (table1 != NULL && table2 != NULL)
+                        table1->selectRightOuterJoin(table2, nameA1, nameA2);    //RIGHT OUTER JOIN
+                } else
+                    cout << "       Não foi possível reconhecer a sintaxe do comando SQL; " << endl;
+            } else if ((toUpper(*word).compare("FULL") == 0)
+                       && (toUpper(*(word+1)).compare("OUTER") == 0)
+                       && (toUpper(*(word+2)).compare("JOIN") == 0)){ //LEFT OUTER JOIN food_des ON food_des.fdgrp_cd = fd_group.fdgrp_cd;
+                parserSelectJoin(word+1, tableName2, nameT1, nameA1, nameT2, nameA2);
+                if (!tableName2.empty() && !nameT1.empty() && !nameA1.empty() && !nameT2.empty() && !nameA2.empty()){
+                    Table *table1 = this->getTable(tableName1);
+                    Table *table2 = this->getTable(tableName2);
+//                    if (table1 != NULL && table2 != NULL)
+//                        table1->selectRightOuterJoin(table2, nameA1, nameA2);    //FULL OUTER JOIN
+                    //                    cout << tableName1 << endl;
+                    //                    cout << tableName2 << endl;
+                    //                    cout << nameT1 << endl;
+                    //                    cout << nameA1 << endl;
+                    //                    cout << nameT2 << endl;
+                    //                    cout << nameA2 << endl;
                 } else
                     cout << "       Não foi possível reconhecer a sintaxe do comando SQL; " << endl;
             } else
@@ -317,7 +326,6 @@ void Database::readFile(string path){
                                 }
                             }
                             tableFK.push_back(removeCharsFromString(trim(attribute), "\"(,);"));
-                            printVector(tableFK);
                             alterTablesFK.push_back(tableFK);
                         }
                     }

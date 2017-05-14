@@ -56,6 +56,10 @@ private:
     void readInOrdem(Element*& node);
     void readPosOrdem(Element*& node);
     
+    void selectInnerJoinPrint(Element* elementTable1, Table *table2, string namePK, string nameFK);
+    void selectLeftOuterJoinPrint(Element* elementTable1, Table *table2, string namePK, string nameFK);
+    void selectRightOuterJoinPrint(Table* table1, Element *elementTable1, Element *elementTable2, string namePK, string nameFK);
+    
     /* método recursivo da exibição da árvore */
     void drawTree(Element* element, int spaces);
     void countElements(Field *field, Element*& element, int& count);
@@ -89,6 +93,7 @@ public:
     void setNextTable(Table *newTable);
     void printAttributes();
     void printAttributesInLine();
+    void printAttributesNull();
     
     /* define os atributos que irão compor a chave primária, usado ao ler o comando de ALTER TABLE do arquivo */
     void applyPrimaryKey(vector<string> attribs);
@@ -110,7 +115,8 @@ public:
     
     int selectCount(string& name, string value);
     void selectInnerJoin(Table *table2, string nameFK, string namePK);
-    void selectLeftOuterJoin(Table *table2, string namePK, string nameFK);
+    void selectLeftOuterJoin(Table *table2, string nameFK, string namePK);
+    void selectRightOuterJoin(Table *table2, string nameFK, string namePK);
     
     /* métodos usados para auxiliar a medição do tempo ao executar determinada operação */
     void startTime();
