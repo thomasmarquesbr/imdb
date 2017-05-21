@@ -45,23 +45,7 @@ int main(int argc, const char * argv[]) {
         element->setPrimaryKey(table->getFirstAttribute());
         table->addElement(element);
     }
-    Element *element1 = new Element();
-    element1->addField("campo1", "lkjoijoijlijlijlijlijlij");
-    element1->addField("campo2", "aeskalja");
-    element1->addField("campo3", "lasejs");
-    element1->addField("campo4", "aseklajel");
-    element1->addField("campo5", "lasjalkj");
-    element1->setPrimaryKey(table->getFirstAttribute());
-    table->addElement(element1);
-
-    Element *element2 = new Element();
-    element2->addField("campo1", "teste2");
-    element2->addField("campo2", "valoalsejr2");
-    element2->addField("campo3", "asleaj");
-    element2->addField("campo4", "qowuieoq");
-    element2->addField("campo5", "zbmznxbz");
-    element2->setPrimaryKey(table->getFirstAttribute());
-    table->addElement(element2);
+    
     
     database.addTable(table);
     
@@ -88,6 +72,20 @@ int main(int argc, const char * argv[]) {
         element->setPrimaryKey(table2->getFirstAttribute());
         table2->addElement(element);
     }
+    
+    Element *element1 = new Element();
+    element1->addField("key", "lasejs");
+    element1->addField("campo1", "lkjoijoijlijlijlijlijlij");
+    element1->addField("campo2", "aeskalja");
+    element1->setPrimaryKey(table->getFirstAttribute());
+    table2->addElement(element1);
+    
+    Element *element2 = new Element();
+    element2->addField("key", "lasejs");
+    element2->addField("campo1", "ASDLKA");
+    element2->addField("campo2", "valoalsejr2");
+    element2->setPrimaryKey(table->getFirstAttribute());
+    table2->addElement(element2);
 //    cout << (table2->getAttribute("campo2")->getTableReference() != NULL) << endl;
 //    Menu::showHeader();
     

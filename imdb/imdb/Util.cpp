@@ -61,9 +61,9 @@ void split(const std::string& str, std::vector<std::string>& v) {
 }
 
 void printVector(vector<string> list){
-    for(vector<string>::iterator it = list.begin(); it != list.end(); it++)
-        cout << *it << "    ";
-    cout << endl;
+    for(vector<string>::iterator it = list.begin(); it != list.end(); it++) {
+        cout << "       " << *it << endl;
+    }
 }
 
 

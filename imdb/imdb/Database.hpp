@@ -27,12 +27,15 @@ private:
     timespec timeEnd;
     double readFileTime;
     double creationTime;
+    double queryTime;
     
 //    string trim(std::string & str); //remove espaços em branco dos campos
 //    string removeCharsFromString(const string str, char* charsToRemove); //remove cacacteres passados como parametros de uma string
 //    string toUpper(string strToConvert);
 //    void split(const std::string& str, std::vector<std::string>& v); //quebra string em partes
 //    void print(vector<string> list); //imprime lista no console, auxilia na criação das estruturas
+    
+    void clearQueryTime();
     void clear();
     
 public:

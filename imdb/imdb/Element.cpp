@@ -185,3 +185,15 @@ void Element::printFieldsInLine(){
         }
     }
 }
+
+string Element::getFieldsInLine(){
+    Field *field = firstField;
+    string line = "       ";
+    if (!empty()){
+        while (field){
+            line += field->getValue() + "      ";
+            field = field->getNext();
+        }
+    }
+    return line;
+}

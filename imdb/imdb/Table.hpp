@@ -56,8 +56,8 @@ private:
     void readInOrdem(Element*& node);
     void readPosOrdem(Element*& node);
     
-    void selectInnerJoinPrint(Element* elementTable1, Table *table2, string namePK, string nameFK);
-    void selectLeftOuterJoinPrint(Element* elementTable1, Table *table2, string namePK, string nameFK);
+    void selectInnerJoinPrint(Element* elementTable1, Table *table2, string namePK, string nameFK, vector<string>& listResult);
+    void selectLeftOuterJoinPrint(Element* elementTable1, Table *table2, string namePK, string nameFK, vector<string>& listResults);
     void selectRightOuterJoinPrint(Table* table1, Element *elementTable1, Element *elementTable2, string namePK, string nameFK);
     
     /* método recursivo da exibição da árvore */
@@ -94,6 +94,8 @@ public:
     void printAttributes();
     void printAttributesInLine();
     void printAttributesNull();
+    string getAttributesInLine();
+    string getAttributesNull();
     
     /* define os atributos que irão compor a chave primária, usado ao ler o comando de ALTER TABLE do arquivo */
     void applyPrimaryKey(vector<string> attribs);
@@ -114,8 +116,8 @@ public:
     void drawTree();
     
     int selectCount(string& name, string value);
-    void selectInnerJoin(Table *table2, string nameFK, string namePK);
-    void selectLeftOuterJoin(Table *table2, string nameFK, string namePK);
+    void selectInnerJoin(Table *table2, string nameFK, string namePK, vector<string>& listResults);
+    void selectLeftOuterJoin(Table *table2, string nameFK, string namePK, vector<string>& listResults);
     void selectRightOuterJoin(Table *table2, string nameFK, string namePK);
     
     /* métodos usados para auxiliar a medição do tempo ao executar determinada operação */

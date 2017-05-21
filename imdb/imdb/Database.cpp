@@ -26,6 +26,10 @@ using namespace std;
 
 /* PRIVATE METHODS */
 
+void Database::clearQueryTime(){
+    this->queryTime = 0.0;
+}
+
 void Database::clear(){
     Table *aux = this->firstTable;
     while (aux != NULL) {
@@ -44,6 +48,7 @@ Database::Database(){
     this->amountTables = 0;
     this->readFileTime = 0.0;
     this->creationTime = 0.0;
+    this->queryTime = 0.0;
 }
 
 Database::~Database(){
@@ -83,7 +88,9 @@ Table* Database::getTable(string name){ //busca por uma tabela no banco, retorna
     return table;
 }
 
-void Database::executeParserSql(string querySql){//Parser SQL para SELECT COUNT(*) e JOIN
+void Database::executeParserSql(string querySql){//Parser SQL para SELECT COUNT(*) e JOINS
+    this->startTime();
+    vector<string> listResults;
     vector<string> words;
     split(querySql, words);
     vector<string>::iterator word=words.begin();
@@ -115,7 +122,7 @@ void Database::executeParserSql(string querySql){//Parser SQL para SELECT COUNT(
                     Table *table1 = this->getTable(tableName1);
                     Table *table2 = this->getTable(tableName2);
                     if (table1 != NULL && table2 != NULL)
-                        table1->selectInnerJoin(table2, nameA1, nameA2);    //INNER JOIN
+                        table1->selectInnerJoin(table2, nameA1, nameA2, listResults);    //INNER JOIN
                 } else
                     cout << "       Não foi possível reconhecer a sintaxe do comando SQL; " << endl;
             } else if ((toUpper(*word).compare("LEFT") == 0)
@@ -126,7 +133,7 @@ void Database::executeParserSql(string querySql){//Parser SQL para SELECT COUNT(
                     Table *table1 = this->getTable(tableName1);
                     Table *table2 = this->getTable(tableName2);
                     if (table1 != NULL && table2 != NULL)
-                        table1->selectLeftOuterJoin(table2, nameA1, nameA2);    //LEFT OUTER JOIN
+                        table1->selectLeftOuterJoin(table2, nameA1, nameA2, listResults);    //LEFT OUTER JOIN
                 } else
                     cout << "       Não foi possível reconhecer a sintaxe do comando SQL; " << endl;
             } else if ((toUpper(*word).compare("RIGHT") == 0)
@@ -164,6 +171,22 @@ void Database::executeParserSql(string querySql){//Parser SQL para SELECT COUNT(
         cout << "       Comando \"" << *word << "\" invalido" << endl;
     }
     cout << endl;
+    this->endTime(&this->queryTime);
+    cout << "       Tempo de busca: " << this->queryTime << " segundos." << endl;
+    cout << endl;
+    this->clearQueryTime();
+    if (listResults.size() > 0){
+        cout << endl;
+        cout << "       Deseja exibir resultados? (S ou N)" << endl;
+        cout << "       >> ";
+        char option;
+        cin >> option;
+        cin.clear(); cin.ignore(CHAR_MAX,'\n');
+        if (option == 'S')
+            printVector(listResults);
+        cout << endl;
+    }
+    vector<string>().swap(listResults); //limpa vector
 }
 
 void Database::printTables() {
