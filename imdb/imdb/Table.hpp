@@ -58,7 +58,8 @@ private:
     
     void selectInnerJoinPrint(Element* elementTable1, Table *table2, string namePK, string nameFK, vector<string>& listResult);
     void selectLeftOuterJoinPrint(Element* elementTable1, Table *table2, string namePK, string nameFK, vector<string>& listResults);
-    void selectRightOuterJoinPrint(Table* table1, Element *elementTable1, Element *elementTable2, string namePK, string nameFK);
+    void selectRightOuterJoinPrint(Table* table1, Element *elementTable1, Element *elementTable2, string namePK, string nameFK, vector<string>& listResults);
+    void selectLeftExcludingJoin(Element* elementTable1, Table *table2, string namePK, string nameFK, vector<string>& listResults);
     
     /* método recursivo da exibição da árvore */
     void drawTree(Element* element, int spaces);
@@ -108,6 +109,7 @@ public:
     
     bool removeElement(string key);
     
+    // Realiza percuros na árvore
     void printElementsPreOrdem();
     void printElementsInOrdem();
     void printElementsPosOrdem();
@@ -115,10 +117,12 @@ public:
     /* imprime a árvore no console de forma visual */
     void drawTree();
     
+    // Consultas SQL
     int selectCount(string& name, string value);
     void selectInnerJoin(Table *table2, string nameFK, string namePK, vector<string>& listResults);
     void selectLeftOuterJoin(Table *table2, string nameFK, string namePK, vector<string>& listResults);
-    void selectRightOuterJoin(Table *table2, string nameFK, string namePK);
+    void selectRightOuterJoin(Table *table2, string nameFK, string namePK, vector<string>& listResults);
+    void selectFullOuterJoin(Table* table2, string nameFK, string namePK, vector<string>& listResults);
     
     /* métodos usados para auxiliar a medição do tempo ao executar determinada operação */
     void startTime();

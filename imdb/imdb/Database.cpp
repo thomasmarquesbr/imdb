@@ -144,7 +144,7 @@ void Database::executeParserSql(string querySql){//Parser SQL para SELECT COUNT(
                     Table *table1 = this->getTable(tableName1);
                     Table *table2 = this->getTable(tableName2);
                     if (table1 != NULL && table2 != NULL)
-                        table1->selectRightOuterJoin(table2, nameA1, nameA2);    //RIGHT OUTER JOIN
+                        table1->selectRightOuterJoin(table2, nameA1, nameA2, listResults);    //RIGHT OUTER JOIN
                 } else
                     cout << "       Não foi possível reconhecer a sintaxe do comando SQL; " << endl;
             } else if ((toUpper(*word).compare("FULL") == 0)
@@ -154,14 +154,8 @@ void Database::executeParserSql(string querySql){//Parser SQL para SELECT COUNT(
                 if (!tableName2.empty() && !nameT1.empty() && !nameA1.empty() && !nameT2.empty() && !nameA2.empty()){
                     Table *table1 = this->getTable(tableName1);
                     Table *table2 = this->getTable(tableName2);
-//                    if (table1 != NULL && table2 != NULL)
-//                        table1->selectRightOuterJoin(table2, nameA1, nameA2);    //FULL OUTER JOIN
-                    //                    cout << tableName1 << endl;
-                    //                    cout << tableName2 << endl;
-                    //                    cout << nameT1 << endl;
-                    //                    cout << nameA1 << endl;
-                    //                    cout << nameT2 << endl;
-                    //                    cout << nameA2 << endl;
+                    if (table1 != NULL && table2 != NULL)
+                        table1->selectFullOuterJoin(table2, nameA1, nameA2, listResults);    //FULL OUTER JOIN
                 } else
                     cout << "       Não foi possível reconhecer a sintaxe do comando SQL; " << endl;
             } else

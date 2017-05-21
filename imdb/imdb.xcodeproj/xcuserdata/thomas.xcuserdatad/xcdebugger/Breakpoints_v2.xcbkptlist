@@ -58,11 +58,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "imdb/Database.cpp"
-            timestampString = "517033368.043023"
+            timestampString = "517080255.041366"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "452"
-            endingLineNumber = "452"
+            startingLineNumber = "446"
+            endingLineNumber = "446"
             landmarkName = "Database::endTime(double *var)"
             landmarkType = "7">
          </BreakpointContent>
@@ -90,11 +90,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "imdb/Table.hpp"
-            timestampString = "517032102.420292"
+            timestampString = "517079526.849483"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "104"
-            endingLineNumber = "104"
+            startingLineNumber = "105"
+            endingLineNumber = "105"
             landmarkName = "class Table"
             landmarkType = "3">
          </BreakpointContent>
@@ -168,11 +168,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "imdb/Util.cpp"
-            timestampString = "516391556.329925"
+            timestampString = "517080255.041366"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "83"
-            endingLineNumber = "83"
+            startingLineNumber = "85"
+            endingLineNumber = "85"
             landmarkName = "parserSelectWhere(vector&lt;string&gt;::iterator word, bool&amp; selectAll, string&amp; nameField, string&amp; valueField)"
             landmarkType = "9">
          </BreakpointContent>
@@ -200,11 +200,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "imdb/Util.cpp"
-            timestampString = "516391556.329925"
+            timestampString = "517080255.041366"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "111"
-            endingLineNumber = "111"
+            startingLineNumber = "113"
+            endingLineNumber = "113"
             landmarkName = "parserSelectJoin(vector&lt;string&gt;::iterator word, string&amp; tableName2, string&amp; nameT1, string&amp; nameA1, string&amp; nameT2, string&amp; nameA2)"
             landmarkType = "9">
          </BreakpointContent>
@@ -216,11 +216,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "imdb/Database.cpp"
-            timestampString = "517033368.043023"
+            timestampString = "517080255.041366"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "343"
-            endingLineNumber = "343"
+            startingLineNumber = "337"
+            endingLineNumber = "337"
             landmarkName = "Database::readFile(string path)"
             landmarkType = "7">
          </BreakpointContent>
@@ -232,11 +232,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "imdb/Database.cpp"
-            timestampString = "517033368.043023"
+            timestampString = "517080255.041366"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "384"
-            endingLineNumber = "384"
+            startingLineNumber = "378"
+            endingLineNumber = "378"
             landmarkName = "Database::readFile(string path)"
             landmarkType = "7">
          </BreakpointContent>
@@ -264,12 +264,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "imdb/Table.cpp"
-            timestampString = "517034646.341327"
+            timestampString = "517097609.186897"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "555"
-            endingLineNumber = "555"
-            landmarkName = "Table::selectLeftOuterJoin(Table *table2, string nameFK, string namePK, vector&lt;string&gt;&amp; listResults)"
+            startingLineNumber = "566"
+            endingLineNumber = "566"
+            landmarkName = "Table::selectRightOuterJoin(Table *table2, string nameFK, string namePK, vector&lt;string&gt;&amp; listResults)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -280,44 +280,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "imdb/Table.cpp"
-            timestampString = "517034646.341327"
+            timestampString = "517097609.186897"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "537"
-            endingLineNumber = "537"
-            landmarkName = "Table::selectLeftOuterJoinPrint(Element* elementTable1, Table *table2, string namePK, string nameFK, vector&lt;string&gt;&amp; listResults)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "imdb/Table.cpp"
-            timestampString = "517034646.341327"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "586"
-            endingLineNumber = "586"
-            landmarkName = "Table::selectRightOuterJoin(Table *table2, string nameFK, string namePK)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "imdb/Table.cpp"
-            timestampString = "517034646.341327"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "568"
-            endingLineNumber = "568"
-            landmarkName = "Table::selectRightOuterJoinPrint(Table* table1, Element *elementTable1, Element *elementTable2, string namePK, string nameFK)"
+            startingLineNumber = "552"
+            endingLineNumber = "552"
+            landmarkName = "Table::selectRightOuterJoinPrint(Table* table1, Element *elementTable1, Element *elementTable2, string namePK, string nameFK, vector&lt;string&gt;&amp; listResults)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -408,11 +376,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "imdb/Database.cpp"
-            timestampString = "517033573.004526"
+            timestampString = "517080255.041366"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "181"
-            endingLineNumber = "181"
+            startingLineNumber = "175"
+            endingLineNumber = "175"
             landmarkName = "Database::executeParserSql(string querySql)"
             landmarkType = "7">
          </BreakpointContent>
@@ -424,11 +392,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "imdb/Table.cpp"
-            timestampString = "517034991.443871"
+            timestampString = "517097609.186897"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "539"
-            endingLineNumber = "539"
+            startingLineNumber = "529"
+            endingLineNumber = "529"
             landmarkName = "Table::selectLeftOuterJoinPrint(Element* elementTable1, Table *table2, string namePK, string nameFK, vector&lt;string&gt;&amp; listResults)"
             landmarkType = "7">
          </BreakpointContent>
@@ -440,11 +408,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "imdb/Table.cpp"
-            timestampString = "517035039.719432"
+            timestampString = "517097609.186897"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "540"
-            endingLineNumber = "540"
+            startingLineNumber = "530"
+            endingLineNumber = "530"
             landmarkName = "Table::selectLeftOuterJoinPrint(Element* elementTable1, Table *table2, string namePK, string nameFK, vector&lt;string&gt;&amp; listResults)"
             landmarkType = "7">
          </BreakpointContent>
