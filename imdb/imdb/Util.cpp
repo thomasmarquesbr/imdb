@@ -62,19 +62,17 @@ void split(const std::string& str, std::vector<std::string>& v) {
 
 void printVector(vector<string> list){
     for(vector<string>::iterator it = list.begin(); it != list.end(); it++) {
-        string prox = *(it+1);
-        if (it != list.end()-1 && prox.compare(*it) != 0)
-            cout << "       " << *it << endl;
+        cout << "       " << *it << endl;
     }
 }
 
-
+/*
+ Parser sql de COUNT(*) quando há um WHERE na query
+ */
 void parserSelectWhere(vector<string>::iterator word, bool& selectAll, string& nameField, string& valueField){
     string afterTableName = *(word+1);
-//    Table *table = this->getTable(removeCharsFromString(*word, "\"(,);"));
     if ((afterTableName.empty() || *(word->end()-1) == ';')){//não existe mais tabelas ou termina com ';'
         selectAll = true;
-//        cout << "       Result:" << endl << "       " << table->getAmountElements() << endl;
     } else if ((afterTableName.compare("WHERE") == 0)){
         nameField = "";
         valueField = "";
@@ -93,15 +91,16 @@ void parserSelectWhere(vector<string>::iterator word, bool& selectAll, string& n
                 it++;
             }
             valueField = removeCharsFromString(valueField, "\"(,);");
-//            cout << "       Result:" << endl << "       " << table->selectCount(nameField, valueField) << endl;
         } else {// espera espaços antes e depois do '='
             nameField = removeCharsFromString(*word,"\"(,);");;
             valueField = removeCharsFromString(*(word+2), "\"(,);");
-//            cout << "       Result:" << endl << "       " << table->selectCount(nameField, valueField) << endl;
         }
     }
 }
 
+/*
+ Parser sql dos joins
+ */
 void parserSelectJoin(vector<string>::iterator word, string& tableName2, string& nameT1, string& nameA1, string& nameT2, string& nameA2){
     word += 2;
     tableName2 = *word;
@@ -138,7 +137,6 @@ void parserSelectJoin(vector<string>::iterator word, string& tableName2, string&
                 it++;
             }
             nameA2 = removeCharsFromString(nameA2,"\"(,);=");
-            /* tableName1; tableName2; nameT1; nameA1; nameT2; nameA2; */
         } else { //existe espaços entre o '='
             nameT1 = "";
             nameA1 = "";
@@ -171,7 +169,6 @@ void parserSelectJoin(vector<string>::iterator word, string& tableName2, string&
                 it++;
             }
             nameA2 = removeCharsFromString(nameA2, "\"(,);=");
-            /* tableName1; tableName2; nameT1; nameA1; nameT2; nameA2; */
         }
     }
 

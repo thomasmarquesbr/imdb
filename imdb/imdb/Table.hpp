@@ -56,10 +56,18 @@ private:
     void readInOrdem(Element*& node);
     void readPosOrdem(Element*& node);
     
-    void selectInnerJoinPrint(Element* elementTable1, Table *table2, string namePK, string nameFK, vector<string>& listResult);
-    void selectLeftOuterJoinPrint(Element* elementTable1, Table *table2, string namePK, string nameFK, vector<string>& listResults);
-    void selectRightOuterJoinPrint(Table* table1, Element *elementTable1, Element *elementTable2, string namePK, string nameFK, vector<string>& listResults);
-    void selectLeftExcludingJoin(Element* elementTable1, Table *table2, string namePK, string nameFK, vector<string>& listResults);
+    /* SQL com chaves primárias apenas */
+    void selectInnerJoinPK(Element* elementTable1, Table *table2, vector<string>& listResult);
+    void selectLeftOuterJoinPK(Element* elementTable1, Table *table2, vector<string>& listResults);
+    void selectRightOuterJoinPK(Element* elementTable2, Table *table1, vector<string>& listResult);
+    void selectFullOuterJoinLeft(Element* elementTable1, Table *table2, vector<string>& listResults);
+    void selectFullOuterJoinRight(Element* elementTable2, Table *table1, vector<string>& listResults);
+    
+    /* SQL com chaves estrangeiras e primárias */
+//    void selectInnerJoinFK(Element* elementTable1, Table *table2, string namePK, string nameFK, vector<string>& listResult);
+    //    void selectLeftOuterJoinPrint(Element* elementTable1, Table *table2, string namePK, string nameFK, vector<string>& listResults);
+    //    void selectRightOuterJoinPrint(Table* table1, Element *elementTable1, Element *elementTable2, string namePK, string nameFK, vector<string>& listResults);
+    //    void selectLeftExcludingJoin(Element* elementTable1, Table *table2, string namePK, string nameFK, vector<string>& listResults);
     
     /* método recursivo da exibição da árvore */
     void drawTree(Element* element, int spaces);
@@ -69,12 +77,10 @@ private:
 public:
     Table(string name);
     ~Table();
-    
-    bool empty(); // verifica se a arvore está vazia
-    
+    /* verifica se a arvore está vazia */
+    bool empty();
     /* verifica se os atributos passados ao começar a ler uma sequencia de registros são válidos naquela tabela, ou seja, se existem todos os atributos que serão inseridos */
     bool validateAttributes(vector<string> *attributes);
-    
     /* testa se foi definido pelo menos 1 atributo chave no momento da criação da tabela*/
     bool existPrimaryKey();
     
@@ -83,10 +89,7 @@ public:
     Attribute* getFirstAttribute();
     Attribute* getAttribute(string name);
     Element* getRootElement();
-    
-    /* localiza elemento na árvore, caso contrário retorna NULL */
     Element* findElement(string key);
-    
     Table* getNextTable();
     
     void addAttribute(string name);
@@ -100,29 +103,32 @@ public:
     
     /* define os atributos que irão compor a chave primária, usado ao ler o comando de ALTER TABLE do arquivo */
     void applyPrimaryKey(vector<string> attribs);
-    
     /* define quais atributos são chaves estrangeiras na tabela */
     void applyForeignKey(Database* database, vector<string> attribs, vector<string> tables);
     
-    /* insere um elemento na árvore */
     void addElement(Element *newElement);
-    
     bool removeElement(string key);
     
-    // Realiza percuros na árvore
+    /* Realiza percuros na árvore */
     void printElementsPreOrdem();
     void printElementsInOrdem();
     void printElementsPosOrdem();
-    
     /* imprime a árvore no console de forma visual */
     void drawTree();
     
-    // Consultas SQL
+    /* Consultas SQL */
     int selectCount(string& name, string value);
-    void selectInnerJoin(Table *table2, string nameFK, string namePK, vector<string>& listResults);
-    void selectLeftOuterJoin(Table *table2, string nameFK, string namePK, vector<string>& listResults);
-    void selectRightOuterJoin(Table *table2, string nameFK, string namePK, vector<string>& listResults);
+    /* Apenas com chaves primárias */
+    void selectInnerJoinPK(Table *table2, string nameFK, string namePK, vector<string>& listResults);
+    void selectLeftOuterJoinPK(Table *table2, string nameFK, string namePK, vector<string>& listResults);
+    void selectRightOuterJoinPK(Table *table2, string nameFK, string namePK, vector<string>& listResults);
     void selectFullOuterJoin(Table* table2, string nameFK, string namePK, vector<string>& listResults);
+    
+    /* Com chaves estrangeiras e primárias */
+//    void selectInnerJoinFK(Table *table2, string nameFK, string namePK, vector<string>& listResults);
+//    void selectLeftOuterJoin(Table *table2, string nameFK, string namePK, vector<string>& listResults);
+//    void selectRightOuterJoin(Table *table2, string nameFK, string namePK, vector<string>& listResults);
+
     
     /* métodos usados para auxiliar a medição do tempo ao executar determinada operação */
     void startTime();

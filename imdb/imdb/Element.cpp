@@ -28,6 +28,7 @@ void Element::clear(){
 Element::Element(){
     this->balance = EQUAL;
     this->key = "";
+    this->mustPrint = true;
     this->firstField = NULL;
     this->lastField = NULL;
     this->amountFields = 0;
@@ -48,6 +49,14 @@ bool Element::existField(string name){
         return false;
     else
         return true;
+}
+
+bool Element::getMustPrint(){
+    return this->mustPrint;
+}
+
+void Element::setMustPrint(bool value){
+    this->mustPrint = value;
 }
 
 int Element::getBalance(){

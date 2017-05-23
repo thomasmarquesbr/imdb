@@ -62,8 +62,9 @@ void Menu::showMenuDatabase(Database *database){
         cout << endl;
         cout << "       1. Listar informações do banco" <<endl;
         cout << "       2. Leitura de arquivo para popular o banco" <<endl;
-        cout << "       3. Realizar consulta SQL" <<endl;
-        cout << "       4. Voltar" <<endl;
+        cout << "       3. Realizar consulta SQL (apenas com chavees primárias)" <<endl;
+        cout << "       4. Realizar consulta SQL (com chave estrangeira e primária, respectivamente)" <<endl;
+        cout << "       5. Voltar" <<endl;
         cout << endl;
         cout << "       >> ";
         cin >> choice;
@@ -103,12 +104,26 @@ void Menu::showMenuDatabase(Database *database){
                 getline(cin, querySql);
                 cin.ignore();
                 if (querySql.at(0) != 'X' && !querySql.empty()) {
-                    database->executeParserSql(querySql);
+                    database->executeParserSql(querySql, true);
                 }
                 cout << endl;
                 break;
             }
             case 4:{
+                cout << endl;
+                cout << "       Digite a consulta sql. (X para sair)" << endl;
+                cout << "       >> ";
+                string querySql;
+                string ok;
+                getline(cin, querySql);
+                cin.ignore();
+                if (querySql.at(0) != 'X' && !querySql.empty()) {
+                    database->executeParserSql(querySql, false);
+                }
+                cout << endl;
+                break;
+            }
+            case 5:{
                 choice = -1;
                 cout << "  ---------------------------------------------------------------------------------------------------------------------- " << endl;
                 break;

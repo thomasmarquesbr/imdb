@@ -22,6 +22,7 @@ private:
     unsigned short balance; //fator de balanceamento da subárvore
     int amountFields;
     string key; //chave primária do elemento, se houver chave composta, a mesma é concatenada e armazenada na variável key
+    bool mustPrint;
     Field *firstField;
     Field *lastField;
     Element *subTreeElement[2]; //referências para as subárvores
@@ -36,6 +37,9 @@ public:
     
     /* verifica se o elemento possui determinado valor em um atributo */
     bool existField(string name);
+    
+    bool getMustPrint();
+    void setMustPrint(bool value);
     
     int getBalance();
     int getAmountFields();

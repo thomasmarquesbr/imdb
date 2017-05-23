@@ -88,7 +88,7 @@ Table* Database::getTable(string name){ //busca por uma tabela no banco, retorna
     return table;
 }
 
-void Database::executeParserSql(string querySql){//Parser SQL para SELECT COUNT(*) e JOINS
+void Database::executeParserSql(string querySql, bool onlyPK){//Parser SQL para SELECT COUNT(*) e JOINS
     this->startTime();
     vector<string> listResults;
     vector<string> words;
@@ -121,8 +121,10 @@ void Database::executeParserSql(string querySql){//Parser SQL para SELECT COUNT(
                 if (!tableName2.empty() && !nameT1.empty() && !nameA1.empty() && !nameT2.empty() && !nameA2.empty()){
                     Table *table1 = this->getTable(tableName1);
                     Table *table2 = this->getTable(tableName2);
-                    if (table1 != NULL && table2 != NULL)
-                        table1->selectInnerJoin(table2, nameA1, nameA2, listResults);    //INNER JOIN
+                    if (table1 != NULL && table2 != NULL && onlyPK)
+                        table1->selectInnerJoinPK(table2, nameA1, nameA2, listResults);    //INNER JOIN
+                    else if (table1 != NULL && table2 != NULL)
+                        cout << endl;
                 } else
                     cout << "       Não foi possível reconhecer a sintaxe do comando SQL; " << endl;
             } else if ((toUpper(*word).compare("LEFT") == 0)
@@ -132,8 +134,10 @@ void Database::executeParserSql(string querySql){//Parser SQL para SELECT COUNT(
                 if (!tableName2.empty() && !nameT1.empty() && !nameA1.empty() && !nameT2.empty() && !nameA2.empty()){
                     Table *table1 = this->getTable(tableName1);
                     Table *table2 = this->getTable(tableName2);
-                    if (table1 != NULL && table2 != NULL)
-                        table1->selectLeftOuterJoin(table2, nameA1, nameA2, listResults);    //LEFT OUTER JOIN
+                    if (table1 != NULL && table2 != NULL && onlyPK)
+                        table1->selectLeftOuterJoinPK(table2, nameA1, nameA2, listResults);    //LEFT OUTER JOIN
+                    else if (table1 != NULL && table2 != NULL)
+                        cout << endl;
                 } else
                     cout << "       Não foi possível reconhecer a sintaxe do comando SQL; " << endl;
             } else if ((toUpper(*word).compare("RIGHT") == 0)
@@ -143,8 +147,10 @@ void Database::executeParserSql(string querySql){//Parser SQL para SELECT COUNT(
                 if (!tableName2.empty() && !nameT1.empty() && !nameA1.empty() && !nameT2.empty() && !nameA2.empty()){
                     Table *table1 = this->getTable(tableName1);
                     Table *table2 = this->getTable(tableName2);
-                    if (table1 != NULL && table2 != NULL)
-                        table1->selectRightOuterJoin(table2, nameA1, nameA2, listResults);    //RIGHT OUTER JOIN
+                    if (table1 != NULL && table2 != NULL && onlyPK)
+                        table1->selectRightOuterJoinPK(table2, nameA1, nameA2, listResults);    //RIGHT OUTER JOIN
+                    else if (table1 != NULL && table2 != NULL)
+                        cout << endl;
                 } else
                     cout << "       Não foi possível reconhecer a sintaxe do comando SQL; " << endl;
             } else if ((toUpper(*word).compare("FULL") == 0)
@@ -154,8 +160,10 @@ void Database::executeParserSql(string querySql){//Parser SQL para SELECT COUNT(
                 if (!tableName2.empty() && !nameT1.empty() && !nameA1.empty() && !nameT2.empty() && !nameA2.empty()){
                     Table *table1 = this->getTable(tableName1);
                     Table *table2 = this->getTable(tableName2);
-                    if (table1 != NULL && table2 != NULL)
+                    if (table1 != NULL && table2 != NULL && onlyPK)
                         table1->selectFullOuterJoin(table2, nameA1, nameA2, listResults);    //FULL OUTER JOIN
+                    else if (table1 != NULL && table2 != NULL)
+                        cout << endl;
                 } else
                     cout << "       Não foi possível reconhecer a sintaxe do comando SQL; " << endl;
             } else
@@ -217,7 +225,7 @@ void Database::addTable(Table *newTable){ //insere uma tabela no banco
     }
 }
 
-void Database::removeTable(string name){ //remove uma tabela do banco
+void Database::removeTable(string name){
     Table* prevTable = firstTable;
     Table* currTable = firstTable;
     if (currTable->getName().compare(name) == 0){
@@ -239,11 +247,14 @@ void Database::removeTable(string name){ //remove uma tabela do banco
     }
 }
 
+/*
+ Executa a leitura do arquivo e armazena em listas vector<string> e só depois são criados as estruturas de acordo com as informações carregadas
+ */
 void Database::readFile(string path){
     vector<vector<string>> createTables; //carrega as tabelas que deverão ser criadas
     vector<vector<vector<string>>> copyTables; //carrega os registros a serem inseridos em cada tabela, a primeira linha do comando também é carregada para saber em qual tabela e quais campos serão inseridos
     vector<vector<string>> alterTables; //carrega as informações de quais campos serão chaves primárias
-    vector<vector<string>> alterTablesFK;
+    vector<vector<string>> alterTablesFK; //carrega as informações de quais campos serão chaves estrangeiras e suas respectivas referencias
     
     startTime();
     string line;
@@ -437,10 +448,16 @@ void Database::readFile(string path){
     cout << "       Tempo de criação da estrutura: " << this->creationTime << " segundos." << endl;
 }
 
+/*
+ Função que inicia a contagem de tempo de alguma operação
+ */
 void Database::startTime(){
     clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &this->timeStart);
 }
 
+/*
+ Função que encerra a contagem de tempo de alguma operação e armazena em uma variável double
+ */
 void Database::endTime(double *var){
     clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &this->timeEnd);
     *var += (this->timeEnd.tv_sec - this->timeStart.tv_sec) + (this->timeEnd.tv_nsec - this->timeStart.tv_nsec) / 1e9;
