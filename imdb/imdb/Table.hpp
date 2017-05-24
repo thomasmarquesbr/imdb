@@ -67,7 +67,7 @@ private:
     /* SQL com chaves estrangeiras e primárias */
     void selectInnerJoinFK(Element* elementTable1, Table *table2, string namePK, string nameFK, vector<string>& listResult);
     void selectLeftOuterJoinFK(Element* elementTable1, Table *table2, string namePK, string nameFK, vector<string>& listResults);
-    void selectRightOuterJoinFK(Table* table1, Element *elementTable1, Element *elementTable2, string namePK, string nameFK, vector<string>& listResults);
+    void selectRightOuterJoinFK(Element* elementTable1, Table *table2, string namePK, string nameFK, vector<string>& listResults);
     void selectFullOuterJoinLeftFK(Element* elementTable1, Table *table2, string namePK, string nameFK, vector<string>& listResults);
     void selectFullOuterJoinRightFK(Element* elementTable2, Table *table1, vector<string>& listResults);
     
