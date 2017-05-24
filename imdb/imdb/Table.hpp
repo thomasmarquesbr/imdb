@@ -55,6 +55,7 @@ private:
     void readPreOrdem(Element*& node);
     void readInOrdem(Element*& node);
     void readPosOrdem(Element*& node);
+    void cleanMarked(Element*& node);
     
     /* SQL com chaves primárias apenas */
     void selectInnerJoinPK(Element* elementTable1, Table *table2, vector<string>& listResult);
@@ -64,10 +65,11 @@ private:
     void selectFullOuterJoinRight(Element* elementTable2, Table *table1, vector<string>& listResults);
     
     /* SQL com chaves estrangeiras e primárias */
-//    void selectInnerJoinFK(Element* elementTable1, Table *table2, string namePK, string nameFK, vector<string>& listResult);
-    //    void selectLeftOuterJoinPrint(Element* elementTable1, Table *table2, string namePK, string nameFK, vector<string>& listResults);
-    //    void selectRightOuterJoinPrint(Table* table1, Element *elementTable1, Element *elementTable2, string namePK, string nameFK, vector<string>& listResults);
-    //    void selectLeftExcludingJoin(Element* elementTable1, Table *table2, string namePK, string nameFK, vector<string>& listResults);
+    void selectInnerJoinFK(Element* elementTable1, Table *table2, string namePK, string nameFK, vector<string>& listResult);
+    void selectLeftOuterJoinFK(Element* elementTable1, Table *table2, string namePK, string nameFK, vector<string>& listResults);
+    void selectRightOuterJoinFK(Table* table1, Element *elementTable1, Element *elementTable2, string namePK, string nameFK, vector<string>& listResults);
+    void selectFullOuterJoinLeftFK(Element* elementTable1, Table *table2, string namePK, string nameFK, vector<string>& listResults);
+    void selectFullOuterJoinRightFK(Element* elementTable2, Table *table1, vector<string>& listResults);
     
     /* método recursivo da exibição da árvore */
     void drawTree(Element* element, int spaces);
@@ -115,6 +117,7 @@ public:
     void printElementsPosOrdem();
     /* imprime a árvore no console de forma visual */
     void drawTree();
+    void cleanMarked();
     
     /* Consultas SQL */
     int selectCount(string& name, string value);
@@ -123,11 +126,11 @@ public:
     void selectLeftOuterJoinPK(Table *table2, string nameFK, string namePK, vector<string>& listResults);
     void selectRightOuterJoinPK(Table *table2, string nameFK, string namePK, vector<string>& listResults);
     void selectFullOuterJoin(Table* table2, string nameFK, string namePK, vector<string>& listResults);
-    
-    /* Com chaves estrangeiras e primárias */
-//    void selectInnerJoinFK(Table *table2, string nameFK, string namePK, vector<string>& listResults);
-//    void selectLeftOuterJoin(Table *table2, string nameFK, string namePK, vector<string>& listResults);
-//    void selectRightOuterJoin(Table *table2, string nameFK, string namePK, vector<string>& listResults);
+    /* Com chaves estrangeira e primária */
+    void selectInnerJoinFK(Table *table2, string nameFK, string namePK, vector<string>& listResults);
+    void selectLeftOuterJoinFK(Table *table2, string nameFK, string namePK, vector<string>& listResults);
+    void selectRightOuterJoinFK(Table *table2, string nameFK, string namePK, vector<string>& listResults);
+    void selectFullOuterJoinFK(Table *table2, string nameFK, string namePK, vector<string>& listResults);
 
     
     /* métodos usados para auxiliar a medição do tempo ao executar determinada operação */

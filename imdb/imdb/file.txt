@@ -94275,7 +94275,7 @@ ALTER TABLE ONLY data_src
 --
 
 ALTER TABLE ONLY datsrcln
-    ADD CONSTRAINT datsrcln_pkey PRIMARY KEY (datasrc_id);
+    ADD CONSTRAINT datsrcln_pkey PRIMARY KEY (ndb_no, nutr_no, datasrc_id);
 
 
 --

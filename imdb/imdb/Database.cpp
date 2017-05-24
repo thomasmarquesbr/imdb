@@ -124,7 +124,7 @@ void Database::executeParserSql(string querySql, bool onlyPK){//Parser SQL para 
                     if (table1 != NULL && table2 != NULL && onlyPK)
                         table1->selectInnerJoinPK(table2, nameA1, nameA2, listResults);    //INNER JOIN
                     else if (table1 != NULL && table2 != NULL)
-                        cout << endl;
+                        table1->selectInnerJoinFK(table2, nameA1, nameA2, listResults);
                 } else
                     cout << "       Não foi possível reconhecer a sintaxe do comando SQL; " << endl;
             } else if ((toUpper(*word).compare("LEFT") == 0)
@@ -137,7 +137,7 @@ void Database::executeParserSql(string querySql, bool onlyPK){//Parser SQL para 
                     if (table1 != NULL && table2 != NULL && onlyPK)
                         table1->selectLeftOuterJoinPK(table2, nameA1, nameA2, listResults);    //LEFT OUTER JOIN
                     else if (table1 != NULL && table2 != NULL)
-                        cout << endl;
+                        table1->selectLeftOuterJoinFK(table2, nameA1, nameA2, listResults);
                 } else
                     cout << "       Não foi possível reconhecer a sintaxe do comando SQL; " << endl;
             } else if ((toUpper(*word).compare("RIGHT") == 0)
@@ -150,7 +150,7 @@ void Database::executeParserSql(string querySql, bool onlyPK){//Parser SQL para 
                     if (table1 != NULL && table2 != NULL && onlyPK)
                         table1->selectRightOuterJoinPK(table2, nameA1, nameA2, listResults);    //RIGHT OUTER JOIN
                     else if (table1 != NULL && table2 != NULL)
-                        cout << endl;
+                        table1->selectRightOuterJoinFK(table2, nameA1, nameA2, listResults);
                 } else
                     cout << "       Não foi possível reconhecer a sintaxe do comando SQL; " << endl;
             } else if ((toUpper(*word).compare("FULL") == 0)
@@ -163,7 +163,7 @@ void Database::executeParserSql(string querySql, bool onlyPK){//Parser SQL para 
                     if (table1 != NULL && table2 != NULL && onlyPK)
                         table1->selectFullOuterJoin(table2, nameA1, nameA2, listResults);    //FULL OUTER JOIN
                     else if (table1 != NULL && table2 != NULL)
-                        cout << endl;
+                        table1->selectFullOuterJoinFK(table2, nameA1, nameA2, listResults);
                 } else
                     cout << "       Não foi possível reconhecer a sintaxe do comando SQL; " << endl;
             } else

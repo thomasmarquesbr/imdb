@@ -218,6 +218,13 @@ void Table::readPosOrdem(Element*& node){
     cout << node->getKey() << ", ";
 }
 
+void Table::cleanMarked(Element *&node){
+    if (node == NULL) return;
+    node->setMustPrint(true);
+    if (node->getLeftElement() != NULL) cleanMarked(node->getLeftElement());
+    if (node->getRightElement() != NULL) cleanMarked(node->getRightElement());
+}
+
 /*
  Imprime a árvore no console de forma visual recursivamente
  */
@@ -562,6 +569,13 @@ void Table::drawTree(){
     drawTree(this->rootElement, 0);
 }
 
+/* 
+ Limpa marcações dos elementos feita durante o RIGHT OUTER JOIN e FULL OUTER JOIN
+ */
+void Table::cleanMarked(){
+    this->cleanMarked(this->rootElement);
+}
+
 /*
  Percorre os elementos da tabela recursivamente e faz a contagem dos elementos 
  que possuem o campo passado para comparação
@@ -736,121 +750,190 @@ void Table::selectFullOuterJoin(Table* table2, string namePK1, string namePK2, v
 
 /*  Chaves estrangeiras e primárias */
 
-// -- INNER JOIN -- // SELECT * FROM datsrcln INNER JOIN data_src ON datsrcln.datasrc_id = data_src.datasrc_id;
-//SELECT * FROM tabelab INNER JOIN tabelaa ON tabelab.numero=tabelaa.numero;
-// SELECT * FROM table2 INNER JOIN table ON table2.campo1=table.campo1;
+/*
+ Função recursiva que executa o INNER JOIN, percorre a Tabela1 procurando pela chave estrangeira e faz uma
+ busca na Tabela2 com o valor dessa chave, e combina apenas os elementos que tiverem a mesma chave estrangeira=primária
+ Ex: SELECT * FROM TabelaA INNER JOIN TabelaB ON TabelaA.numero = TabelaB.numero;
+ */
+void Table::selectInnerJoinFK(Element* elementTable1, Table *table2, string namePK, string nameFK, vector<string>& listResult){
+    if (elementTable1 == NULL) return;
+    Field *field = elementTable1->getField(nameFK);
+    if (field != NULL){
+        Element *elementTable2 = table2->findElement(field->getValue());
+        if (field != NULL && elementTable2 != NULL && field->getValue().compare(elementTable2->getKey()) == 0){
+            listResult.push_back(elementTable1->getFieldsInLine() + elementTable2->getFieldsInLine());
+        }
+        if (elementTable1->getLeftElement() != NULL) selectInnerJoinFK(elementTable1->getLeftElement(), table2, namePK, nameFK, listResult);
+        if (elementTable1->getRightElement() != NULL) selectInnerJoinFK(elementTable1->getRightElement(), table2, namePK, nameFK, listResult);
+    }
+}
 
-//void Table::selectInnerJoinPrint(Element* elementTable1, Table *table2, string namePK, string nameFK, vector<string>& listResult){
-//    if (elementTable1 == NULL) return;
-//    Field *field = elementTable1->getField(nameFK);
-//    if (field != NULL){
-//        Element *elementTable2 = table2->findElement(field->getValue());
-//        if (field != NULL && elementTable2 != NULL && field->getValue().compare(elementTable2->getKey()) == 0){
-//            listResult.push_back(elementTable1->getFieldsInLine() + elementTable2->getFieldsInLine());
-//        }
-//        if (elementTable1->getLeftElement() != NULL) selectInnerJoinPrint(elementTable1->getLeftElement(), table2, namePK, nameFK, listResult);
-//        if (elementTable1->getRightElement() != NULL) selectInnerJoinPrint(elementTable1->getRightElement(), table2, namePK, nameFK, listResult);
-//    }
-//}
-//
-//void Table::selectInnerJoin(Table *table2, string nameFK, string namePK, vector<string>& listResults){
-//    if (this->getAttribute(nameFK) != NULL && this->getAttribute(nameFK)->isForeignKey()
-//        && table2->getAttribute(namePK) != NULL && table2->getAttribute(namePK)->isPrimarykey()) {
-//        string line1 = this->getAttributesInLine()+table2->getAttributesInLine();
-//        listResults.push_back(line1);
-//        selectInnerJoinPrint(this->getRootElement(), table2, nameFK, namePK, listResults);
-//    } else
-//        cout << "       Os campos " << nameFK << " e " << namePK << " não são chaves estrangeiras e chaves primárias respectivamente; " << endl;
-//}
+/*
+ Função pública que executa a chamada para função recursiva de INNER JOIN acima, antes da chamada é feito os testes
+ para verificar se as chaves passadas são chaves estrangeira e primária respectivamente, verifica a referencia da chave
+ estrangeira na tabela definida e prepara a impressão dos nomes dos campos das duas tabelas
+ */
+void Table::selectInnerJoinFK(Table *table2, string nameFK, string namePK, vector<string>& listResults){
+    if (this->getAttribute(nameFK) != NULL && this->getAttribute(nameFK)->isForeignKey()
+        && this->getAttribute(nameFK)->getTableReference()->getName().compare(table2->getName()) == 0 //verifica referencia da chave estrangeira
+        && table2->getAttribute(namePK) != NULL && table2->getAttribute(namePK)->isPrimarykey()) {
+        string line1 = this->getAttributesInLine()+table2->getAttributesInLine();
+        listResults.push_back(line1);
+        selectInnerJoinFK(this->getRootElement(), table2, nameFK, namePK, listResults);
+    } else {
+        if (!this->getAttribute(nameFK)->isForeignKey() || table2->getAttribute(namePK)->isPrimarykey())
+            cout << "       Os campos \"" << nameFK << "\" e \"" << namePK << "\" não são chaves estrangeiras e chaves primárias respectivamente; " << endl;
+        if (this->getAttribute(nameFK)->getTableReference()->getName().compare(table2->getName()) != 0)
+            cout << "       O campo \"" << nameFK << "\" da tabela \"" << this->name << "\" não está referenciando a tabela \"" << table2->name;
+    }
+}
 
-// -- LEFT OUTER JOIN -- //     SELECT * FROM datsrcln LEFT OUTER JOIN data_src ON datsrcln.datasrc_id = data_src.datasrc_id;
-//     SELECT * FROM table2 LEFT OUTER JOIN table ON table2.campo1 = table.campo1;
+/*
+ Função recursiva que executa o LEFT OUTER JOIN, percorre a Tabela1 obtendo a chave estrangeira e faz uma
+ busca na Tabela2 com essa chave, e combina os elementos que tiverem a mesma chave, caso não encontre na Tabela 2,
+ combina os elementos da tabela 1 com campos Nulos
+ Ex: SELECT * FROM TabelaA LEFT OUTER JOIN TabelaB ON TabelaA.numero = TabelaB.numero;
+ */
+void Table::selectLeftOuterJoinFK(Element* elementTable1, Table *table2, string namePK, string nameFK, vector<string>& listResults){
+    if (elementTable1 == NULL) return;
+    Field *field = elementTable1->getField(nameFK);
+    if (field != NULL) {
+        Element *elementTable2 = table2->findElement(field->getValue());
+        if (field != NULL && elementTable2 != NULL && field->getValue().compare(elementTable2->getKey()) == 0){
+            listResults.push_back(elementTable1->getFieldsInLine() + elementTable2->getFieldsInLine());
+        } else if(field != NULL && elementTable2 == NULL){
+            listResults.push_back(elementTable1->getFieldsInLine() + table2->getAttributesNull());
+        }
+        if (elementTable1->getLeftElement() != NULL) selectLeftOuterJoinFK(elementTable1->getLeftElement(), table2, namePK, nameFK, listResults);
+        if (elementTable1->getRightElement() != NULL) selectLeftOuterJoinFK(elementTable1->getRightElement(), table2, namePK, nameFK, listResults);
+    }
+}
 
-//void Table::selectLeftOuterJoinPrint(Element* elementTable1, Table *table2, string namePK, string nameFK, vector<string>& listResults){
-//    if (elementTable1 == NULL) return;
-//    Field *field = elementTable1->getField(nameFK);
-//    if (field != NULL) {
-//        Element *elementTable2 = table2->findElement(field->getValue());
-//        if (field != NULL && elementTable2 != NULL && field->getValue().compare(elementTable2->getKey()) == 0){
-//            listResults.push_back(elementTable1->getFieldsInLine() + elementTable2->getFieldsInLine());
-//        } else if(field != NULL && elementTable2 == NULL){
-//            listResults.push_back(elementTable1->getFieldsInLine() + table2->getAttributesNull());
-//        }
-//        if (elementTable1->getLeftElement() != NULL) selectLeftOuterJoinPrint(elementTable1->getLeftElement(), table2, namePK, nameFK, listResults);
-//        if (elementTable1->getRightElement() != NULL) selectLeftOuterJoinPrint(elementTable1->getRightElement(), table2, namePK, nameFK, listResults);
-//    }
-//}
-//
-//void Table::selectLeftOuterJoin(Table *table2, string nameFK, string namePK, vector<string>& listResults){
-//    if (this->getAttribute(nameFK) != NULL && this->getAttribute(nameFK)->isForeignKey()
-//        && table2->getAttribute(namePK) != NULL && table2->getAttribute(namePK)->isPrimarykey()){
-//        string line1 = this->getAttributesInLine() + table2->getAttributesInLine();
-//        selectLeftOuterJoinPrint(this->getRootElement(), table2, nameFK, namePK, listResults);
-//    } else
-//        cout << "       Os campos " << nameFK << " e " << namePK << " não são chaves estrangeiras e chaves primárias respectivamente; " << endl;
-//}
+/*
+ Função pública que executa a chamada para função recursiva de LEFT OUTER JOIN acima, antes da chamada é feito os testes
+ para verificar se as chaves passadas são chaves estrangeira e primária respectivamente, verifica a referencia da chave
+ estrangeira na tabela definida e prepara a impressão dos nomes dos campos das duas tabelas
+ */
+void Table::selectLeftOuterJoinFK(Table *table2, string nameFK, string namePK, vector<string>& listResults){
+    if (this->getAttribute(nameFK) != NULL && this->getAttribute(nameFK)->isForeignKey()
+        && this->getAttribute(nameFK)->getTableReference()->getName().compare(table2->getName()) == 0 //verifica referencia da chave estrangeira
+        && table2->getAttribute(namePK) != NULL && table2->getAttribute(namePK)->isPrimarykey()){
+        string line1 = this->getAttributesInLine() + table2->getAttributesInLine();
+        selectLeftOuterJoinFK(this->getRootElement(), table2, nameFK, namePK, listResults);
+    } else {
+        if (!this->getAttribute(nameFK)->isForeignKey() || table2->getAttribute(namePK)->isPrimarykey())
+            cout << "       Os campos \"" << nameFK << "\" e \"" << namePK << "\" não são chaves estrangeiras e chaves primárias respectivamente; " << endl;
+        if (this->getAttribute(nameFK)->getTableReference()->getName().compare(table2->getName()) != 0)
+            cout << "       O campo \"" << nameFK << "\" da tabela \"" << this->name << "\" não está referenciando a tabela \"" << table2->name;
+    }
+}
 
-// -- RIGHT OUTER JOIN -- //  SELECT * FROM datsrcln RIGHT OUTER JOIN data_src ON datsrcln.datasrc_id = data_src.datasrc_id;
-// SELECT * FROM table2 RIGHT OUTER JOIN table ON table2.campo1 = table1.campo1;
+/*
+ Função recursiva que executa o RIGHT OUTER JOIN, percorre a Tabela2 obtendo a chave primaria e faz uma
+ busca na Tabela1 buscando pela chave estrangeira, e combina os elementos que tiverem a mesma chave, caso não encontre na Tabela 1,
+ combina os elementos da tabela 2 com campos Nulos. Marca os elementos ja combinados para que eles não sejam exibidos novamente
+ Ex: SELECT * FROM TabelaA LEFT OUTER JOIN TabelaB ON TabelaA.numero = TabelaB.numero;
+ */
+void Table::selectRightOuterJoinFK(Table* table1, Element *elementTable1, Element *elementTable2, string namePK, string nameFK, vector<string>& listResults){
+    if (elementTable2 == NULL) return;
+    Field *field2 = elementTable2->getField(namePK);
+    Field *field1 = elementTable1->getField(nameFK);
+    if (field2 != NULL && field1 != NULL && field2->getValue().compare(field1->getValue()) == 0){
+        if (elementTable2->getMustPrint()) {
+            listResults.push_back(elementTable1->getFieldsInLine() + elementTable2->getFieldsInLine());
+            elementTable2->setMustPrint(false);
+        }
+        if (elementTable2->getLeftElement() != NULL) selectRightOuterJoinFK(table1, table1->getRootElement(), elementTable2->getLeftElement(), namePK, nameFK, listResults);
+        if (elementTable2->getRightElement() != NULL) selectRightOuterJoinFK(table1, table1->getRootElement(), elementTable2->getRightElement(), namePK, nameFK, listResults);
+    } else {
+        if (elementTable1->getLeftElement() != NULL) selectRightOuterJoinFK(table1, elementTable1->getLeftElement(), elementTable2, namePK, nameFK, listResults);
+        if (elementTable1->getRightElement() != NULL) selectRightOuterJoinFK(table1, elementTable1->getRightElement(), elementTable2, namePK, nameFK, listResults);
+        if (elementTable1->getLeftElement() == NULL && elementTable1->getRightElement() == NULL && elementTable2->getMustPrint()){
+            listResults.push_back(table1->getAttributesNull() + elementTable2->getFieldsInLine());
+            elementTable2->setMustPrint(false);
+        }
+    }
+}
 
-//void Table::selectRightOuterJoinPrint(Table* table1, Element *elementTable1, Element *elementTable2, string namePK, string nameFK, vector<string>& listResults){
-//    if (elementTable2 == NULL) return;
-//    Field *field2 = elementTable2->getField(namePK);
-//    Field *field1 = elementTable1->getField(nameFK);
-//    if (field2 != NULL && field1 != NULL && field2->getValue().compare(field1->getValue()) == 0){
-//        if (elementTable2->getMustPrint()) {
-//            listResults.push_back(elementTable1->getFieldsInLine() + elementTable2->getFieldsInLine());
-//            elementTable2->setMustPrint(false);
-//        }
-//        if (elementTable2->getLeftElement() != NULL) selectRightOuterJoinPrint(table1, table1->getRootElement(), elementTable2->getLeftElement(), namePK, nameFK, listResults);
-//        if (elementTable2->getRightElement() != NULL) selectRightOuterJoinPrint(table1, table1->getRootElement(), elementTable2->getRightElement(), namePK, nameFK, listResults);
-//    } else {
-//        if (elementTable1->getLeftElement() != NULL) selectRightOuterJoinPrint(table1, elementTable1->getLeftElement(), elementTable2, namePK, nameFK, listResults);
-//        if (elementTable1->getRightElement() != NULL) selectRightOuterJoinPrint(table1, elementTable1->getRightElement(), elementTable2, namePK, nameFK, listResults);
-//        if (elementTable1->getLeftElement() == NULL && elementTable1->getRightElement() == NULL && elementTable2->getMustPrint()){
-//            listResults.push_back(table1->getAttributesNull() + elementTable2->getFieldsInLine());
-//            elementTable2->setMustPrint(false);
-//        }
-//    }
-//}
-//
-//void Table::selectRightOuterJoin(Table *table2, string nameFK, string namePK, vector<string>& listResults){
-//    if (this->getAttribute(nameFK) != NULL && this->getAttribute(nameFK)->isForeignKey()
-//        && table2->getAttribute(namePK) != NULL && table2->getAttribute(namePK)->isPrimarykey()){
-//        string line1 = this->getAttributesInLine() + table2->getAttributesInLine();
-//        listResults.push_back(line1);
-//        selectRightOuterJoinPrint(this, this->getRootElement(), table2->getRootElement(), nameFK, namePK, listResults);
-//        table2->cleanMarked();
-//    } else
-//        cout << "       Os campos " << nameFK << " e " << namePK << " não são chaves estrangeiras e chaves primárias respectivamente; " << endl;
-//}
+/*
+ Função pública que executa a chamada para função recursiva de RIGHT OUTER JOIN acima, antes da chamada é feito os testes
+ para verificar se as chaves passadas são chaves estrangeira e primeira respectivamente, verifica a referencia da chave
+ estrangeira na tabela definida e prepara a impressão dos nomes dos campos das duas tabelas
+ */
+void Table::selectRightOuterJoinFK(Table *table2, string nameFK, string namePK, vector<string>& listResults){
+    if (this->getAttribute(nameFK) != NULL && this->getAttribute(nameFK)->isForeignKey()
+        && this->getAttribute(nameFK)->getTableReference()->getName().compare(table2->getName()) == 0 //verifica referencia da chave estrangeira
+        && table2->getAttribute(namePK) != NULL && table2->getAttribute(namePK)->isPrimarykey()){
+        string line1 = this->getAttributesInLine() + table2->getAttributesInLine();
+        listResults.push_back(line1);
+        selectRightOuterJoinFK(this, this->getRootElement(), table2->getRootElement(), nameFK, namePK, listResults);
+        table2->cleanMarked();
+    } else {
+        if (!this->getAttribute(nameFK)->isForeignKey() || table2->getAttribute(namePK)->isPrimarykey())
+            cout << "       Os campos \"" << nameFK << "\" e \"" << namePK << "\" não são chaves estrangeiras e chaves primárias respectivamente; " << endl;
+        if (this->getAttribute(nameFK)->getTableReference()->getName().compare(table2->getName()) != 0)
+            cout << "       O campo \"" << nameFK << "\" da tabela \"" << this->name << "\" não está referenciando a tabela \"" << table2->name;
+    }
+}
 
-// -- RIGHT OUTER JOIN -- // SELECT * FROM datsrcln FULL OUTER JOIN data_src ON datsrcln.datasrc_id=data_src.datasrc_id;
-// SELECT * FROM table2 FULL OUTER JOIN table ON table2.campo1 = table1.campo1;
+/*
+ Função recursiva que executa o FULL OUTER JOIN, percorre a Tabela1 obtendo as chaves estrangeiras e faz uma
+ busca na Tabela2 com essa chave, e combina os elementos que tiverem a mesma chave, caso não encontre na Tabela 2,
+ combina os elementos da tabela 1 com campos Nulos. Neste caso, quando existe o campo nas duas tabelas, os elementos da Tabela 2
+ são marcados para que na próxima etapa não seja impresso repetidamente
+ Ex: SELECT * FROM TabelaA FULL OUTER JOIN TabelaB ON TabelaA.numero = TabelaB.numero;
+ */
+void Table::selectFullOuterJoinLeftFK(Element *elementTable1, Table *table2, string namePK, string nameFK, vector<string> &listResults){
+    if (elementTable1 == NULL) return;
+    Field *field = elementTable1->getField(nameFK);
+    if (field != NULL) {
+        Element *elementTable2 = table2->findElement(field->getValue());
+        if (field != NULL && elementTable2 != NULL && field->getValue().compare(elementTable2->getKey()) == 0){
+            listResults.push_back(elementTable1->getFieldsInLine() + elementTable2->getFieldsInLine());
+            elementTable2->setMustPrint(false);
+        } else if(field != NULL && elementTable2 == NULL){
+            listResults.push_back(elementTable1->getFieldsInLine() + table2->getAttributesNull());
+        }
+        if (elementTable1->getLeftElement() != NULL) selectLeftOuterJoinFK(elementTable1->getLeftElement(), table2, namePK, nameFK, listResults);
+        if (elementTable1->getRightElement() != NULL) selectLeftOuterJoinFK(elementTable1->getRightElement(), table2, namePK, nameFK, listResults);
+    }
+}
 
-//void Table::selectLeftExcludingJoin(Element* elementTable1, Table *table2, string namePK, string nameFK, vector<string>& listResults){
-//    if (elementTable1 == NULL) return;
-//    Field *field = elementTable1->getField(nameFK);
-//    if (field != NULL) {
-//        Element *elementTable2 = table2->findElement(field->getValue());
-//        if(field != NULL && elementTable2 == NULL){
-//            listResults.push_back(elementTable1->getFieldsInLine() + table2->getAttributesNull());
-//        }
-//        if (elementTable1->getLeftElement() != NULL) selectLeftOuterJoinPrint(elementTable1->getLeftElement(), table2, namePK, nameFK, listResults);
-//        if (elementTable1->getRightElement() != NULL) selectLeftOuterJoinPrint(elementTable1->getRightElement(), table2, namePK, nameFK, listResults);
-//    }
-//}
-//
-//void Table::selectFullOuterJoin(Table* table2, string nameFK, string namePK, vector<string>& listResults){
-//    if (this->getAttribute(nameFK) != NULL && this->getAttribute(nameFK)->isForeignKey()
-//        && table2->getAttribute(namePK) != NULL && table2->getAttribute(namePK)->isPrimarykey()){
-//        string line1 = this->getAttributesInLine() + table2->getAttributesInLine();
-//        listResults.push_back(line1);
-//        selectLeftExcludingJoin(this->getRootElement(), table2, nameFK, namePK, listResults);
-//        selectRightOuterJoinPrint(this, this->getRootElement(), table2->getRootElement(), nameFK, namePK, listResults);
-//    } else
-//        cout << "       Os campos " << nameFK << " e " << namePK << " não são chaves estrangeiras e chaves primárias respectivamente; " << endl;
-//}
+/*
+ Percorre a Tabela 2 e imprime os elementos não marcados pela primeira parte e concatena esses elementos com elementos Nulos
+ Os elementos marcados também são desmarcados nessa parte. Esta parte tem um resultado similar ao right excluding join, desde que a
+ função acima seja executada antes.
+ */
+void Table::selectFullOuterJoinRightFK(Element *elementTable2, Table *table1, vector<string> &listResults){
+    if (elementTable2 == NULL) return;
+    if (elementTable2->getMustPrint()){
+        listResults.push_back(table1->getAttributesNull() + elementTable2->getFieldsInLine());
+    } else {
+        elementTable2->setMustPrint(true);
+    }
+    if (elementTable2->getLeftElement() != NULL) selectFullOuterJoinRight(elementTable2->getLeftElement(), table1, listResults);
+    if (elementTable2->getRightElement() != NULL) selectFullOuterJoinRight(elementTable2->getRightElement(), table1, listResults);
+}
+
+/*
+ Função pública que executa a chamada para as duas funções recursivas de FULL OUTER JOIN acima, antes da chamada é feito os testes
+ para verificar se as chaves passadas são chaves primárias e prepara a impressão dos nomes dos campos das duas tabelas
+ */
+void Table::selectFullOuterJoinFK(Table *table2, string nameFK, string namePK, vector<string> &listResults){
+    if (this->getAttribute(nameFK) != NULL && this->getAttribute(nameFK)->isForeignKey()
+        && this->getAttribute(nameFK)->getTableReference()->getName().compare(table2->getName()) == 0 //verifica referencia da chave estrangeira
+        && table2->getAttribute(namePK) != NULL && table2->getAttribute(namePK)->isPrimarykey()){
+        string line1 = this->getAttributesInLine() + table2->getAttributesInLine();
+        listResults.push_back(line1);
+        selectFullOuterJoinLeftFK(this->rootElement, table2, nameFK, namePK, listResults);
+        selectFullOuterJoinRightFK(table2->getRootElement(), this, listResults);
+    } else {
+        if (!this->getAttribute(nameFK)->isForeignKey() || table2->getAttribute(namePK)->isPrimarykey())
+            cout << "       Os campos \"" << nameFK << "\" e \"" << namePK << "\" não são chaves estrangeiras e chaves primárias respectivamente; " << endl;
+        if (this->getAttribute(nameFK)->getTableReference()->getName().compare(table2->getName()) != 0)
+            cout << "       O campo \"" << nameFK << "\" da tabela \"" << this->name << "\" não está referenciando a tabela \"" << table2->name;
+    }
+}
 
 /* 
  Função que inicia a contagem de tempo de alguma operação

@@ -12,7 +12,7 @@
 using namespace std;
 
 void Menu::showHeader(){
-    cout << "********************************************* IN MEMORY DATABASE - Parte 1 *********************************************** " << endl;
+    cout << "********************************************* IN MEMORY DATABASE - Parte 2 *********************************************** " << endl;
     cout << "**     Curso: Mestrado em Ciência da Computação - UFJF                                                                  ** " << endl;
     cout << "**     Disciplina: Algoritmos e estruturas de dados                                                                     ** " << endl;
     cout << "**     Professor: Jairo Francisco de Souza                                                                              ** " << endl;
