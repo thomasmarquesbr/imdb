@@ -18,8 +18,10 @@ void Attribute::clear(){
 
 Attribute::Attribute(string name){
     this->primaryKey = false;
+    this->foreignKey = false;
     this->name = name;
     this->next = NULL;
+    this->table = NULL;
 }
 
 Attribute::Attribute(string name, bool isPrimaryKey){
@@ -36,6 +38,10 @@ bool Attribute::isPrimarykey(){
     return this->primaryKey;
 }
 
+bool Attribute::isForeignKey(){
+    return this->foreignKey;
+}
+
 string Attribute::getName(){
     return this->name;
 }
@@ -50,4 +56,16 @@ void Attribute::setNext(Attribute *attribute){
 
 void Attribute::setPrimaryKey(bool value){
     this->primaryKey = value;
+}
+
+void Attribute::setForeignKey(bool value){
+    this->foreignKey = value;
+}
+
+void Attribute::setTableReference(Table *table){
+    this->table = table;
+}
+
+Table* Attribute::getTableReference(){
+    return this->table;
 }

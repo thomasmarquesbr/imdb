@@ -10,20 +10,19 @@
 #define Element_hpp
 
 #include <stdio.h>
+
+class Element;
+
 #include "Field.hpp"
 #include "Attribute.hpp"
-
-enum Direction {
-    LEFT  = 0,
-    RIGHT = 1,
-    EQUAL = 2,
-};
+#include "Util.hpp"
 
 class Element{
 private:
     unsigned short balance; //fator de balanceamento da subárvore
     int amountFields;
     string key; //chave primária do elemento, se houver chave composta, a mesma é concatenada e armazenada na variável key
+    bool mustPrint;
     Field *firstField;
     Field *lastField;
     Element *subTreeElement[2]; //referências para as subárvores
@@ -39,12 +38,17 @@ public:
     /* verifica se o elemento possui determinado valor em um atributo */
     bool existField(string name);
     
+    bool getMustPrint();
+    void setMustPrint(bool value);
+    
     int getBalance();
     int getAmountFields();
     string getKey();
     Field* getFirstField();
     Field* getLastField();
     Field* getField(string name);
+    
+    void substituteElement(Element *newElement);
     
     /* retorna subarvore necessária de acordo com a direção da mesma que é passada como parâmetro */
     Element*& getSubTreeElement(int direction);
@@ -61,6 +65,8 @@ public:
     void addField(string name, string value);
     void removeField(string name);
     void printFields();
+    void printFieldsInLine();
+    string getFieldsInLine();
 };
 
 #endif /* Element_hpp */

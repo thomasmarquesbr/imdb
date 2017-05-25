@@ -17,7 +17,7 @@ void Element::clear(){
     while (aux != NULL) {
         this->key.clear();
         firstField = firstField->getNext();
-        delete aux;
+//        delete aux;
         aux = firstField;
     }
     lastField = NULL;
@@ -28,6 +28,7 @@ void Element::clear(){
 Element::Element(){
     this->balance = EQUAL;
     this->key = "";
+    this->mustPrint = true;
     this->firstField = NULL;
     this->lastField = NULL;
     this->amountFields = 0;
@@ -48,6 +49,14 @@ bool Element::existField(string name){
         return false;
     else
         return true;
+}
+
+bool Element::getMustPrint(){
+    return this->mustPrint;
+}
+
+void Element::setMustPrint(bool value){
+    this->mustPrint = value;
 }
 
 int Element::getBalance(){
@@ -81,6 +90,13 @@ Field* Element::getField(string name){ //percorre os campos até encontrar o Fie
         }
     }
     return field;
+}
+
+void Element::substituteElement(Element *newElement){
+    this->amountFields = newElement->getAmountFields();
+    this->key = newElement->getKey();
+    this->firstField = newElement->getFirstField();
+    this->lastField = newElement->getLastField();
 }
 
 Element*& Element::getSubTreeElement(int direction){
@@ -164,4 +180,29 @@ void Element::printFields(){
         }
         cout << endl;
     }
+}
+
+void Element::printFieldsInLine(){
+    Field *field = firstField;
+    cout << "       ";
+    if (empty())
+        cout << "Os campos do elemento não existem! \n";
+    else {
+        while (field){
+            cout << field->getValue() << "      ";
+            field = field->getNext();
+        }
+    }
+}
+
+string Element::getFieldsInLine(){
+    Field *field = firstField;
+    string line = "       ";
+    if (!empty()){
+        while (field){
+            line += field->getValue() + "      ";
+            field = field->getNext();
+        }
+    }
+    return line;
 }

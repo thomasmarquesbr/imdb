@@ -15,6 +15,7 @@
 		E9D2CDA21EA7923400D698C1 /* Field.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E9D2CDA01EA7923400D698C1 /* Field.cpp */; };
 		E9D636A81E9D4D2800B81D71 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E9D636A71E9D4D2800B81D71 /* main.cpp */; };
 		E9D636E61EA56AD300B81D71 /* file.txt in CopyFiles */ = {isa = PBXBuildFile; fileRef = E9D636E51EA56AD300B81D71 /* file.txt */; };
+		E9F3AEB31EC3ED6900405726 /* Util.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E9F3AEB11EC3ED6900405726 /* Util.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -55,6 +56,8 @@
 		E9D636A41E9D4D2800B81D71 /* imdb */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = imdb; sourceTree = BUILT_PRODUCTS_DIR; };
 		E9D636A71E9D4D2800B81D71 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		E9D636E51EA56AD300B81D71 /* file.txt */ = {isa = PBXFileReference; lastKnownFileType = text; name = file.txt; path = imdb/file.txt; sourceTree = "<group>"; };
+		E9F3AEB11EC3ED6900405726 /* Util.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Util.cpp; sourceTree = "<group>"; };
+		E9F3AEB21EC3ED6900405726 /* Util.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Util.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,6 +104,8 @@
 				E9D2CDA11EA7923400D698C1 /* Field.hpp */,
 				E91E3C6F1EAC48E200B8592A /* Attribute.cpp */,
 				E91E3C701EAC48E200B8592A /* Attribute.hpp */,
+				E9F3AEB11EC3ED6900405726 /* Util.cpp */,
+				E9F3AEB21EC3ED6900405726 /* Util.hpp */,
 			);
 			path = imdb;
 			sourceTree = "<group>";
@@ -170,6 +175,7 @@
 				E942FAF11EB7AD10002E6764 /* Menu.cpp in Sources */,
 				E9D2CD9F1EA791F300D698C1 /* Element.cpp in Sources */,
 				E9D636A81E9D4D2800B81D71 /* main.cpp in Sources */,
+				E9F3AEB31EC3ED6900405726 /* Util.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

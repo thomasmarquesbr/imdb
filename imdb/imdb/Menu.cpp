@@ -7,13 +7,12 @@
 //
 
 #include <iostream>
-#include "Database.hpp"
 #include "Menu.hpp"
 
 using namespace std;
 
 void Menu::showHeader(){
-    cout << "********************************************* IN MEMORY DATABASE - Parte 1 *********************************************** " << endl;
+    cout << "********************************************* IN MEMORY DATABASE - Parte 2 *********************************************** " << endl;
     cout << "**     Curso: Mestrado em Ciência da Computação - UFJF                                                                  ** " << endl;
     cout << "**     Disciplina: Algoritmos e estruturas de dados                                                                     ** " << endl;
     cout << "**     Professor: Jairo Francisco de Souza                                                                              ** " << endl;
@@ -63,7 +62,9 @@ void Menu::showMenuDatabase(Database *database){
         cout << endl;
         cout << "       1. Listar informações do banco" <<endl;
         cout << "       2. Leitura de arquivo para popular o banco" <<endl;
-        cout << "       3. Voltar" <<endl;
+        cout << "       3. Realizar consulta SQL (apenas com chavees primárias)" <<endl;
+        cout << "       4. Realizar consulta SQL (com chave estrangeira e primária, respectivamente)" <<endl;
+        cout << "       5. Voltar" <<endl;
         cout << endl;
         cout << "       >> ";
         cin >> choice;
@@ -95,6 +96,34 @@ void Menu::showMenuDatabase(Database *database){
                 break;
             }
             case 3:{
+                cout << endl;
+                cout << "       Digite a consulta sql. (X para sair)" << endl;
+                cout << "       >> ";
+                string querySql;
+                string ok;
+                getline(cin, querySql);
+                cin.ignore();
+                if (querySql.at(0) != 'X' && !querySql.empty()) {
+                    database->executeParserSql(querySql, true);
+                }
+                cout << endl;
+                break;
+            }
+            case 4:{
+                cout << endl;
+                cout << "       Digite a consulta sql. (X para sair)" << endl;
+                cout << "       >> ";
+                string querySql;
+                string ok;
+                getline(cin, querySql);
+                cin.ignore();
+                if (querySql.at(0) != 'X' && !querySql.empty()) {
+                    database->executeParserSql(querySql, false);
+                }
+                cout << endl;
+                break;
+            }
+            case 5:{
                 choice = -1;
                 cout << "  ---------------------------------------------------------------------------------------------------------------------- " << endl;
                 break;
@@ -220,14 +249,15 @@ void Menu::showMenuSearchTable(Table *table){
         cout << "  ---------------------------------------------------------------------------------------------------------------------- " << endl;
         cout << "       / Menu Principal / Tabelas / "+table->getName() << endl;
         cout << endl;
-        cout << "       1. Listar informações da tabela " <<endl;
-        cout << "       2. Inserir registro " <<endl;
-        cout << "       3. Buscar registro" <<endl;
-        cout << "       4. Exibir registros PreOrdem" <<endl;
-        cout << "       5. Exibir registros InOrdem" <<endl;
-        cout << "       6. Exibir registros PosOrdem" <<endl;
-        cout << "       7. Exibir árvore de registros" <<endl;
-        cout << "       8. Voltar" <<endl;
+        cout << "       1. Listar informações da tabela " << endl;
+        cout << "       2. Inserir registro " << endl;
+        cout << "       3. Remover registro " << endl;
+        cout << "       4. Buscar registro" << endl;
+        cout << "       5. Exibir registros PreOrdem" << endl;
+        cout << "       6. Exibir registros InOrdem" << endl;
+        cout << "       7. Exibir registros PosOrdem" << endl;
+        cout << "       8. Exibir árvore de registros" << endl;
+        cout << "       9. Voltar" << endl;
         cout << endl;
         cout << "       >> ";
         cin >> choice;
@@ -282,6 +312,26 @@ void Menu::showMenuSearchTable(Table *table){
                 cin >> key;
                 cin.clear(); cin.ignore(BC_STRING_MAX,'\n');
                 double time = 0.0;
+                cout << endl;
+                table->startTime();
+                if (table->removeElement(key))
+                    cout << "       Registro removido com sucesso." << endl;
+                else
+                    cout << "       Registro não existe na tabela." << endl;
+                table->endTime(&time);
+                cout << endl;
+                cout << "       Tempo de remoção: " << time << " segundos." << endl;
+                break;
+            }
+            case 4:{
+                cout << endl;
+                cout << "       Digite a chave do registro. (X para sair)" << endl;
+                cout << "       >> ";
+                string key;
+                key = "";
+                cin >> key;
+                cin.clear(); cin.ignore(BC_STRING_MAX,'\n');
+                double time = 0.0;
                 table->startTime();
                 Element *element = table->findElement(key);
                 table->endTime(&time);
@@ -293,23 +343,23 @@ void Menu::showMenuSearchTable(Table *table){
                 cout << "       Tempo de busca: " << time << " segundos." << endl;
                 break;
             }
-            case 4:{
+            case 5:{
                 table->printElementsPreOrdem();
                 break;
             }
-            case 5:{
+            case 6:{
                 table->printElementsInOrdem();
                 break;
             }
-            case 6:{
+            case 7:{
                 table->printElementsPosOrdem();
                 break;
             }
-            case 7:{
+            case 8:{
                 table->drawTree();
                 break;
             }
-            case 8:{
+            case 9:{
                 choice = -1;
                 break;
             }

@@ -26,8 +26,10 @@
 using namespace std;
 
 int main(int argc, const char * argv[]) {
-    Menu::showHeader();
     Database database;
+    Menu::showHeader();
     Menu::showMainMenu(&database);
+    
+        
     return 0;
 }
